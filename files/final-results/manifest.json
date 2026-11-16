@@ -1,0 +1,291 @@
+{
+  "protocol_version": 1,
+  "synthetic": false,
+  "complete_model_set": true,
+  "data": {
+    "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+    "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+    "synthetic": false,
+    "files": {
+      "train.csv": {
+        "rows": 3000888,
+        "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+      },
+      "test.csv": {
+        "rows": 28512,
+        "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+      },
+      "sample_submission.csv": {
+        "rows": 28512,
+        "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+      }
+    },
+    "missing_training_dates": [
+      "2013-12-25",
+      "2014-12-25",
+      "2015-12-25",
+      "2016-12-25"
+    ]
+  },
+  "horizon": 16,
+  "context_days": 512,
+  "hgb_origin_stride_days": 15,
+  "folds": [
+    {
+      "fold": "development_1",
+      "role": "development",
+      "train_end": "2016-06-30",
+      "forecast_start": "2016-07-01",
+      "forecast_end": "2016-07-16"
+    },
+    {
+      "fold": "development_2",
+      "role": "development",
+      "train_end": "2016-08-15",
+      "forecast_start": "2016-08-16",
+      "forecast_end": "2016-08-31"
+    },
+    {
+      "fold": "development_3",
+      "role": "development",
+      "train_end": "2016-10-31",
+      "forecast_start": "2016-11-01",
+      "forecast_end": "2016-11-16"
+    },
+    {
+      "fold": "development_4",
+      "role": "development",
+      "train_end": "2016-12-08",
+      "forecast_start": "2016-12-09",
+      "forecast_end": "2016-12-24"
+    },
+    {
+      "fold": "development_5",
+      "role": "development",
+      "train_end": "2017-02-28",
+      "forecast_start": "2017-03-01",
+      "forecast_end": "2017-03-16"
+    },
+    {
+      "fold": "development_6",
+      "role": "development",
+      "train_end": "2017-03-31",
+      "forecast_start": "2017-04-01",
+      "forecast_end": "2017-04-16"
+    },
+    {
+      "fold": "evaluation_1",
+      "role": "evaluation",
+      "train_end": "2017-04-30",
+      "forecast_start": "2017-05-01",
+      "forecast_end": "2017-05-16"
+    },
+    {
+      "fold": "evaluation_2",
+      "role": "evaluation",
+      "train_end": "2017-05-16",
+      "forecast_start": "2017-05-17",
+      "forecast_end": "2017-06-01"
+    },
+    {
+      "fold": "evaluation_3",
+      "role": "evaluation",
+      "train_end": "2017-06-12",
+      "forecast_start": "2017-06-13",
+      "forecast_end": "2017-06-28"
+    }
+  ],
+  "models": [
+    "seasonal_naive",
+    "weekday_mean",
+    "prophet_promotion",
+    "t0_beta_promotion",
+    "global_hgb_sales",
+    "global_hgb_historical_promotion",
+    "global_hgb_future_promotion"
+  ],
+  "hgb_configurations": {
+    "reference": {
+      "loss": "squared_error",
+      "learning_rate": 0.1,
+      "max_iter": 150,
+      "max_leaf_nodes": 43,
+      "min_samples_leaf": 40,
+      "l2_regularization": 1.0,
+      "max_bins": 127,
+      "early_stopping": false,
+      "random_state": 481
+    },
+    "regularized": {
+      "loss": "squared_error",
+      "learning_rate": 0.1,
+      "max_iter": 150,
+      "max_leaf_nodes": 31,
+      "min_samples_leaf": 40,
+      "l2_regularization": 3.0,
+      "max_bins": 127,
+      "early_stopping": false,
+      "random_state": 481
+    },
+    "flexible": {
+      "loss": "squared_error",
+      "learning_rate": 0.1,
+      "max_iter": 150,
+      "max_leaf_nodes": 63,
+      "min_samples_leaf": 40,
+      "l2_regularization": 0.5,
+      "max_bins": 127,
+      "early_stopping": false,
+      "random_state": 481
+    }
+  },
+  "hgb_tuning_rmsle": {
+    "reference": 0.5206862920803595,
+    "regularized": 0.5232401527363645,
+    "flexible": 0.5208591513013235
+  },
+  "hgb_tuning_model": "global_hgb_future_promotion",
+  "selected_hgb_configuration": "reference",
+  "development_rmsle": {
+    "seasonal_naive": 0.6761760259540889,
+    "weekday_mean": 0.6498057796171718,
+    "prophet_promotion": 0.6769381424561081,
+    "t0_beta_promotion": 0.5252290951391528,
+    "global_hgb_sales": 0.537462493212927,
+    "global_hgb_historical_promotion": 0.538437698085579,
+    "global_hgb_future_promotion": 0.5206862920803595
+  },
+  "selected_model": "global_hgb_future_promotion",
+  "runtime": {
+    "python": "3.13.5",
+    "pandas": "2.2.3",
+    "numpy": "2.1.3",
+    "scikit_learn": "1.6.1",
+    "omp_threads": "4",
+    "slow_models": {
+      "prophet_promotion": {
+        "model": "prophet_promotion",
+        "data": {
+          "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+          "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+          "synthetic": false,
+          "files": {
+            "train.csv": {
+              "rows": 3000888,
+              "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+            },
+            "test.csv": {
+              "rows": 28512,
+              "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+            },
+            "sample_submission.csv": {
+              "rows": 28512,
+              "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+            }
+          },
+          "missing_training_dates": [
+            "2013-12-25",
+            "2014-12-25",
+            "2015-12-25",
+            "2016-12-25"
+          ]
+        },
+        "origins": {
+          "development_1": "2016-06-30",
+          "development_2": "2016-08-15",
+          "development_3": "2016-10-31",
+          "development_4": "2016-12-08",
+          "development_5": "2017-02-28",
+          "development_6": "2017-03-31",
+          "evaluation_1": "2017-04-30",
+          "evaluation_2": "2017-05-16",
+          "evaluation_3": "2017-06-12"
+        },
+        "seconds": {
+          "development_1": 129.41458458300622,
+          "development_2": 130.073789749993,
+          "development_3": 110.00124691599922,
+          "development_4": 108.49445945800107,
+          "development_5": 100.94298350000463,
+          "development_6": 122.35984770799405,
+          "evaluation_1": 96.58249254099792,
+          "evaluation_2": 63.73566879201098,
+          "evaluation_3": 62.901057207986014
+        },
+        "python": "3.13.7",
+        "packages": {
+          "prophet": "1.2.1",
+          "cmdstanpy": "1.3.2"
+        },
+        "jobs": 8
+      },
+      "t0_beta_promotion": {
+        "model": "t0_beta_promotion",
+        "data": {
+          "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+          "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+          "synthetic": false,
+          "files": {
+            "train.csv": {
+              "rows": 3000888,
+              "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+            },
+            "test.csv": {
+              "rows": 28512,
+              "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+            },
+            "sample_submission.csv": {
+              "rows": 28512,
+              "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+            }
+          },
+          "missing_training_dates": [
+            "2013-12-25",
+            "2014-12-25",
+            "2015-12-25",
+            "2016-12-25"
+          ]
+        },
+        "origins": {
+          "development_1": "2016-06-30",
+          "development_2": "2016-08-15",
+          "development_3": "2016-10-31",
+          "development_4": "2016-12-08",
+          "development_5": "2017-02-28",
+          "development_6": "2017-03-31",
+          "evaluation_1": "2017-04-30",
+          "evaluation_2": "2017-05-16",
+          "evaluation_3": "2017-06-12"
+        },
+        "seconds": {
+          "development_1": 85.46699162499863,
+          "development_2": 90.64931579100084,
+          "development_3": 98.70279829100764,
+          "development_4": 80.61762887499935,
+          "development_5": 83.59234400000423,
+          "development_6": 78.0334007920028,
+          "evaluation_1": 77.19555912500073,
+          "evaluation_2": 101.4531745419954,
+          "evaluation_3": 78.48069520801073
+        },
+        "python": "3.13.7",
+        "packages": {
+          "tfc-t0": "0.6.1",
+          "huggingface-hub": "2.4.0",
+          "torch": "2.15.0"
+        },
+        "checkpoint": "theforecastingcompany/t0-beta",
+        "revision": "941e522547ec63f0f2aad57089fa0f5b8498bdf8",
+        "device": "cpu",
+        "batch_size": 16,
+        "load_seconds": 5.133814667002298,
+        "torch_threads": 4
+      }
+    }
+  },
+  "artifact_sha256": {
+    "scores.csv": "fc4d8e1db730817016329d1ac2a8fc33a1f34abe0a7c113e56002a4054c3b955",
+    "slices.csv": "c264cd48a4e4ed4bc5b4f5e5d8a5b72972dd113e664aa69b3bd27a7482abed27",
+    "tuning.csv": "af2359744270bf0ec0975ad172413a46ba2027600d5586bc62603039f35bc629"
+  }
+}

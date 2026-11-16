@@ -31,7 +31,13 @@ MODEL_SETTINGS = {
 MODELS = {"global_hgb": False, "global_hgb_promotion": True}
 
 
-def origin_features(panel: Panel, origin: int, *, promotions: bool) -> pd.DataFrame:
+def origin_features(
+    panel: Panel,
+    origin: int,
+    *,
+    promotions: bool,
+    historical_promotions: bool | None = None,
+) -> pd.DataFrame:
     """Create one row for each series and lead using information at the origin."""
     n_series = len(panel.series)
     leads = np.arange(1, panel.horizon + 1)
@@ -64,6 +70,9 @@ def origin_features(panel: Panel, origin: int, *, promotions: bool) -> pd.DataFr
         features[f"zero_rate_{days}"] = np.repeat(zero_share, panel.horizon)
     if promotions:
         features["planned_promotion"] = np.log1p(panel.promotions[:, target]).ravel()
+    if historical_promotions is None:
+        historical_promotions = promotions
+    if historical_promotions:
         historical = np.log1p(panel.promotions[:, origin - 27 : origin + 1])
         features["promotion_mean_28"] = np.repeat(
             np.nanmean(historical, axis=1), panel.horizon
@@ -71,7 +80,13 @@ def origin_features(panel: Panel, origin: int, *, promotions: bool) -> pd.DataFr
     return pd.DataFrame(features, dtype=np.float32)
 
 
-def training_examples(panel: Panel, cutoff: int, *, promotions: bool):
+def training_examples(
+    panel: Panel,
+    cutoff: int,
+    *,
+    promotions: bool,
+    historical_promotions: bool | None = None,
+):
     """Simulate earlier 16-day forecasts with all labels observed by the cutoff."""
     first_day = max(0, cutoff - CONTEXT_LENGTH + 1)
     earliest_origin = first_day + max(ROLLING_DAYS) - 1
@@ -80,7 +95,12 @@ def training_examples(panel: Panel, cutoff: int, *, promotions: bool):
     for origin in reversed(origins):
         y = panel.sales[:, origin + 1 : origin + panel.horizon + 1].ravel()
         observed = np.isfinite(y)
-        frame = origin_features(panel, origin, promotions=promotions)
+        frame = origin_features(
+            panel,
+            origin,
+            promotions=promotions,
+            historical_promotions=historical_promotions,
+        )
         feature_frames.append(frame.loc[observed])
         labels.append(np.log1p(y[observed]).astype(np.float32))
     if not feature_frames:
@@ -88,17 +108,22 @@ def training_examples(panel: Panel, cutoff: int, *, promotions: bool):
     return pd.concat(feature_frames, ignore_index=True), np.concatenate(labels)
 
 
-def _predict(panel: Panel, cutoff: int, *, promotions: bool):
+def fit_predict(panel: Panel, x, y, future, settings):
+    """Fit a pooled histogram regressor and return original-unit forecasts."""
     from sklearn.ensemble import HistGradientBoostingRegressor
 
-    x, y = training_examples(panel, cutoff, promotions=promotions)
     model = HistGradientBoostingRegressor(
-        categorical_features=["store", "family"], **MODEL_SETTINGS
+        categorical_features=["store", "family"], **settings
     )
     model.fit(x, y)
-    future = origin_features(panel, cutoff, promotions=promotions)
     predicted = np.maximum(np.expm1(model.predict(future)), 0)
-    return predicted.reshape(len(panel.series), panel.horizon), len(y)
+    return predicted.reshape(len(panel.series), panel.horizon)
+
+
+def _predict(panel: Panel, cutoff: int, *, promotions: bool):
+    x, y = training_examples(panel, cutoff, promotions=promotions)
+    future = origin_features(panel, cutoff, promotions=promotions)
+    return fit_predict(panel, x, y, future, MODEL_SETTINGS), len(y)
 
 
 def _metrics(actual, predicted):

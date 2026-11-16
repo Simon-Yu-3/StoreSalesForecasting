@@ -1,0 +1,43 @@
+{
+  "data": {
+    "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+    "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+    "synthetic": false,
+    "files": {
+      "train.csv": {
+        "rows": 3000888,
+        "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+      },
+      "test.csv": {
+        "rows": 28512,
+        "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+      },
+      "sample_submission.csv": {
+        "rows": 28512,
+        "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+      }
+    },
+    "missing_training_dates": [
+      "2013-12-25",
+      "2014-12-25",
+      "2015-12-25",
+      "2016-12-25"
+    ]
+  },
+  "summary": {
+    "observations": 3000888,
+    "series": 1782,
+    "recorded_dates": 1684,
+    "first_date": "2013-01-01",
+    "last_date": "2017-08-15",
+    "zero_sales_share": 0.3129506999261552,
+    "promoted_share": 0.20371603338745065,
+    "median_sales": 11.0,
+    "mean_sales": 357.77574911261894,
+    "p90_sales": 867.0
+  },
+  "artifact_sha256": {
+    "monthly.csv": "d3ede5b662a51e343204d443a2edd493878eeb39651aa18249e7ffd6a5f06588",
+    "weekday.csv": "c2f87be28e2fea64dc0b4d9233b2d91ce2655008fdf9c62805f0ad3f32260886"
+  }
+}

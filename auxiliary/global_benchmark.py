@@ -80,6 +80,14 @@ def origin_features(
     return pd.DataFrame(features, dtype=np.float32)
 
 
+def training_origins(panel: Panel, cutoff: int) -> range:
+    """Return simulated training origins in ascending order within the context."""
+    first_day = max(0, cutoff - CONTEXT_LENGTH + 1)
+    earliest_origin = first_day + max(ROLLING_DAYS) - 1
+    latest_origin = cutoff - panel.horizon
+    return range(latest_origin, earliest_origin - 1, -ORIGIN_STEP)[::-1]
+
+
 def training_examples(
     panel: Panel,
     cutoff: int,
@@ -88,11 +96,8 @@ def training_examples(
     historical_promotions: bool | None = None,
 ):
     """Simulate earlier 16-day forecasts with all labels observed by the cutoff."""
-    first_day = max(0, cutoff - CONTEXT_LENGTH + 1)
-    earliest_origin = first_day + max(ROLLING_DAYS) - 1
-    origins = range(cutoff - panel.horizon, earliest_origin - 1, -ORIGIN_STEP)
     feature_frames, labels = [], []
-    for origin in reversed(origins):
+    for origin in training_origins(panel, cutoff):
         y = panel.sales[:, origin + 1 : origin + panel.horizon + 1].ravel()
         observed = np.isfinite(y)
         frame = origin_features(

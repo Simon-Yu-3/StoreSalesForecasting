@@ -1,0 +1,19 @@
+name: econ481-store-sales
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - numpy=2.1.3
+  - pandas=2.2.3
+  - matplotlib=3.10.0
+  - tabulate=0.9.0
+  - ipykernel=6.29.5
+  - pytest=8.3.4
+  - pip
+  - pip:
+      - nbmake==1.5.5
+      - prophet==1.2.1
+      - ruff==0.11.13
+      - tfc-t0==0.6.1
+# For full model runs, install tfc-t0[torch]==0.6.1 or tfc-t0[mlx]==0.6.1
+# as documented in README.md. The course notebook checks use the base environment.

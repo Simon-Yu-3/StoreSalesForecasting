@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Store Sales Forecast Benchmark</title>
+<style>
+:root {
+  font-family: Inter, "Segoe UI", system-ui, sans-serif;
+  color: #182d2b;
+  background: #f4f6f3;
+  --ink: #182d2b;
+  --muted: #536664;
+  --green: #087566;
+  --border: #dce5de;
+  --paper: #ffffff;
+  --tabular: tabular-nums;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }
+.wrap { width: min(100% - 48px, 1180px); margin-inline: auto; }
+.masthead { background: #173a35; color: #f7f9f4; }
+.brand { padding-block: 21px; font-size: .82rem; font-weight: 650; border-bottom: 1px solid #ffffff32; }
+.hero { padding-block: 38px 34px; }
+.hero h1 { margin: 0 0 10px; max-width: 19ch; font-size: clamp(2.25rem, 5vw, 3.65rem); font-weight: 700; letter-spacing: -.06em; line-height: 1.04; }
+.hero p { margin: 0; max-width: 64ch; color: #d9e8e1; line-height: 1.57; }
+main { padding-block: 24px 48px; }
+.controls { display: flex; flex-wrap: wrap; align-items: end; gap: 10px 14px; margin-bottom: 18px; }
+label { display: grid; gap: 5px; font-size: .81rem; font-weight: 700; }
+select { font: inherit; font-size: .91rem; font-weight: 550; color: var(--ink); background: var(--paper); border: 1px solid #a8b9b3; border-radius: 7px; padding: 9px 12px; min-height: 44px; max-width: 100%; }
+select:focus-visible, summary:focus-visible, a:focus-visible, .table-scroll:focus-visible { outline: 3px solid #0c8776; outline-offset: 3px; }
+.window-note { color: var(--muted); margin: 0 0 3px auto; font-size: .88rem; line-height: 1.5; }
+.summary-strip { display: grid; grid-template-columns: 1fr 1fr 1fr; background: #e4eee7; border: 1px solid #d3e3d8; border-radius: 10px; margin: 0 0 18px; overflow: hidden; }
+.stat { padding: 15px 18px; min-width: 0; }
+.stat + .stat { border-left: 1px solid #d1dfd5; }
+.stat .label { margin: 0 0 5px; color: var(--muted); font-weight: 650; font-size: .78rem; }
+.stat .number { margin: 0 0 2px; font-size: clamp(1.45rem, 3vw, 2.08rem); letter-spacing: -.05em; line-height: 1.1; font-weight: 710; font-variant-numeric: var(--tabular); }
+.stat .detail { margin: 0; color: var(--muted); font-size: .8rem; line-height: 1.38; }
+.grid { display: grid; grid-template-columns: minmax(0, .94fr) minmax(0, 1.06fr); gap: 16px; align-items: start; }
+.card { min-width: 0; background: var(--paper); padding: 19px 20px; border: 1px solid var(--border); border-radius: 11px; }
+h2 { margin: 0; font-size: 1.18rem; font-weight: 720; letter-spacing: -.02em; }
+.note { margin: 4px 0 14px; color: var(--muted); font-size: .82rem; line-height: 1.48; }
+.ranking { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
+.ranking li { display: grid; align-items: center; grid-template-columns: minmax(108px, 1fr) minmax(50px, .93fr) minmax(48px, auto); gap: 9px; min-height: 33px; }
+.model-name { font-weight: 640; font-size: .84rem; line-height: 1.27; }
+.track { background: #edf2ee; height: 11px; border-radius: 2px; overflow: hidden; }
+.fill { display: block; height: 100%; border-radius: 2px; }
+.metric-value { justify-self: end; font-size: .84rem; font-variant-numeric: var(--tabular); }
+.legend { display: flex; gap: 6px 13px; flex-wrap: wrap; margin: 0 0 7px; padding: 0; list-style: none; }
+.legend li { font-size: .74rem; color: var(--muted); white-space: nowrap; }
+.legend-mark { display: inline-block; width: 16px; margin-right: 4px; vertical-align: 3px; border-top: 2px solid; }
+canvas { width: 100%; height: 262px; display: block; }
+details { margin-top: 8px; color: var(--muted); font-size: .82rem; }
+summary { cursor: pointer; width: fit-content; padding: 6px 2px; }
+.table-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: var(--tabular); font-size: .81rem; }
+caption { text-align: left; margin-block: 5px; }
+th, td { padding: 7px 8px; border-bottom: 1px solid #e4ebe5; text-align: right; white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+th { font-weight: 650; }
+.insights { margin-top: 16px; }
+.insights .note { margin-bottom: 8px; }
+.insights th, .insights td { padding-inline: 3px; }
+.insights thead th { white-space: normal; }
+.planning { color: var(--ink); }
+.planning p { margin: 9px 0 0; font-size: .91rem; line-height: 1.6; }
+footer { margin: 26px 0 0; color: var(--muted); font-size: .79rem; line-height: 1.65; }
+footer a { color: #145f56; text-underline-offset: 2px; }
+noscript { display: block; margin: 12px 0; color: #614926; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+@media (max-width: 850px) {
+  .grid { grid-template-columns: 1fr; }
+  .ranking li { grid-template-columns: minmax(110px, .62fr) minmax(44px, 1fr) minmax(50px, auto); }
+  .window-note { margin: 0; }
+}
+@media (max-width: 480px) {
+  .wrap { width: min(100% - 28px, 1180px); }
+  .brand { padding-block: 15px; }
+  .hero { padding-block: 27px 24px; }
+  .card { padding: 15px 13px; }
+  .stat { padding: 11px 8px; }
+  .stat .number { font-size: clamp(1.14rem, 5.7vw, 1.55rem); }
+  .stat .detail, .stat .label { font-size: .73rem; }
+  .ranking li { gap: 7px; }
+  .model-name { font-size: .79rem; }
+}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="wrap">
+    <div class="brand">UW ECON 481A · Store Sales Forecasting</div>
+    <div class="hero">
+      <h1>How well can we forecast grocery sales?</h1>
+      <p>Compare conventional forecasts with a pretrained time-series model over three 16-day windows for Corporación Favorita’s Ecuadorian stores.</p>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <form class="controls" aria-label="Benchmark filters">
+    <label for="fold">Forecast window
+      <select id="fold">
+        <option value="validation_1">Development 1 · Jun 29–Jul 14</option>
+        <option value="validation_2">Development 2 · Jul 15–30</option>
+        <option value="holdout" selected>Final holdout · Jul 31–Aug 15</option>
+      </select>
+    </label>
+    <label for="metric">Error metric
+      <select id="metric">
+        <option value="rmsle" selected>RMSLE</option>
+        <option value="mae">MAE (units)</option>
+      </select>
+    </label>
+    <p class="window-note" id="window-note">Forecast origin July 30, 2017 · 1,782 store–family series</p>
+  </form>
+
+  <section class="summary-strip" aria-label="Selected benchmark summary">
+    <div class="stat">
+      <p class="label" id="best-label">Lowest RMSLE</p>
+      <p class="number" id="best-value">0.41312</p>
+      <p class="detail" id="best-model">t0-beta + promotions</p>
+    </div>
+    <div class="stat">
+      <p class="label">Lower than seasonal naïve</p>
+      <p class="number" id="improvement">33.0%</p>
+      <p class="detail">Same window and metric</p>
+    </div>
+    <div class="stat">
+      <p class="label">Forecasts scored</p>
+      <p class="number" id="row-count">28,512</p>
+      <p class="detail">Store–family–day rows</p>
+    </div>
+  </section>
+  <p class="sr-only" role="status" id="filter-status"></p>
+  <noscript>The default summary shows the measured holdout RMSLE. Enable JavaScript to explore rankings, forecast leads, and promotion groups.</noscript>
+
+  <div class="grid">
+    <section class="card" aria-labelledby="rank-title">
+      <h2 id="rank-title">Model ranking</h2>
+      <p class="note" id="metric-description">Root mean squared logarithmic error. Lower is better.</p>
+      <ol class="ranking" id="ranking" aria-label="Forecast models ranked by error"></ol>
+    </section>
+    <section class="card" aria-labelledby="lead-title">
+      <h2 id="lead-title">Error by forecast lead</h2>
+      <p class="note">Four reference models, scored separately at each day ahead.</p>
+      <ul class="legend" id="legend" aria-label="Chart legend"></ul>
+      <canvas id="lead-chart" role="img" aria-label="Forecast error by day ahead. The exact plotted values are in the next table."></canvas>
+      <details>
+        <summary>View lead-time values</summary>
+        <div class="table-scroll" role="region" aria-label="Forecast lead values" tabindex="0">
+          <table id="lead-values">
+            <caption class="sr-only" id="lead-caption">RMSLE by forecast lead</caption>
+            <thead id="lead-head"></thead>
+            <tbody id="lead-body"></tbody>
+          </table>
+        </div>
+      </details>
+    </section>
+  </div>
+
+  <div class="grid insights">
+    <section class="card" aria-labelledby="promo-title">
+      <h2 id="promo-title">The value of promotion inputs</h2>
+      <p class="note">The same t0-beta checkpoint, with and without scheduled promotion counts.</p>
+      <div class="table-scroll">
+        <table>
+          <caption class="sr-only" id="promo-caption">RMSLE by promotion status</caption>
+          <thead>
+            <tr><th scope="col">Rows</th><th scope="col">Count</th><th scope="col">History only</th><th scope="col">With promotions</th></tr>
+          </thead>
+          <tbody id="promo-body"></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="card planning" aria-labelledby="planning-title">
+      <h2 id="planning-title">Planning implication</h2>
+      <p>On the final holdout, adding promotions to t0-beta reduced RMSLE from <strong>0.46917 to 0.41312</strong> and increased MAE from <strong>70.82 to 71.45 units</strong>.</p>
+      <p>If the 16-day schedule is available at forecast time, test the promotion-aware model against a low-cost weekday baseline. Track unit errors and availability alongside RMSLE before using forecasts to order inventory.</p>
+    </section>
+  </div>
+  <footer>
+    Results are local backtests on observed 2017 sales. The final Kaggle test window is unlabeled in the downloaded data. The promotion comparison assumes the full schedule was known at forecast time.
+    <br><a href="../project.ipynb">Project notebook</a> · <a href="experiment-plan.md">Experiment plan</a> · <a href="official-results/scores.csv">Score data</a> · <a href="official-results/slices.csv">Slice data</a>
+  </footer>
+</main>
+<script type="application/json" id="benchmark-data">
+{"validation_1":{"trainEnd":"2017-06-28","scores":[{"model":"seasonal_naive","n":28512,"rmsle":0.5176185596076112,"mae":78.82439561762067},{"model":"weekday_mean","n":28512,"rmsle":0.40593134166712336,"mae":61.687162396559756},{"model":"prophet","n":28512,"rmsle":0.4584851744613063,"mae":145.97559976252958},{"model":"prophet_rigid","n":28512,"rmsle":0.44321354680536584,"mae":98.06717124953524},{"model":"prophet_promotion","n":28512,"rmsle":0.46318379177360547,"mae":250.49476055714734},{"model":"t0_beta","n":28512,"rmsle":0.38971665341851314,"mae":53.06520509516138},{"model":"t0_beta_promotion","n":28512,"rmsle":0.38569754628191455,"mae":54.908842711458426}],"leads":{"weekday_mean":[{"rmsle":0.43154137594810005,"mae":45.54003256804565},{"rmsle":0.3979305356277689,"mae":46.77939911073749},{"rmsle":0.4030122978270925,"mae":108.84396892304454},{"rmsle":0.3976678788860363,"mae":118.07216837185256},{"rmsle":0.4067242230845804,"mae":85.25583432493534},{"rmsle":0.4149350130032351,"mae":62.49715975572923},{"rmsle":0.38786707213656163,"mae":54.23474948494668},{"rmsle":0.4191514075187372,"mae":45.716510076478606},{"rmsle":0.3953152581923554,"mae":50.692418316648514},{"rmsle":0.3686646428691923,"mae":56.77864463353144},{"rmsle":0.38352550039463373,"mae":58.52770952232226},{"rmsle":0.40837506139531166,"mae":45.97076389672783},{"rmsle":0.4036118541762975,"mae":49.20089181459177},{"rmsle":0.41412471753605806,"mae":46.598821262910114},{"rmsle":0.44473536340034786,"mae":49.71718912520467},{"rmsle":0.4115618893235335,"mae":62.568337157249395}],"prophet_promotion":[{"rmsle":0.43201712004654824,"mae":81.94261595964944},{"rmsle":0.41786419444692163,"mae":75.42743484391582},{"rmsle":0.4234042432458542,"mae":156.0074797836321},{"rmsle":0.45810560493925917,"mae":214.86842887763095},{"rmsle":0.43726443591331093,"mae":108.12484472867128},{"rmsle":0.4609320163343863,"mae":147.5870332869261},{"rmsle":0.4574646405144743,"mae":478.31740916473444},{"rmsle":0.4711525353575345,"mae":155.29435801153383},{"rmsle":0.4610201718744015,"mae":224.4986207889543},{"rmsle":0.4411354281595326,"mae":275.67186722729156},{"rmsle":0.43637717590010944,"mae":263.8087294956818},{"rmsle":0.4830071517251516,"mae":205.69169391855368},{"rmsle":0.48840992306248926,"mae":223.2533555808937},{"rmsle":0.5180935019277505,"mae":943.5014936127467},{"rmsle":0.5107273143040781,"mae":199.7449328039587},{"rmsle":0.49865897367709117,"mae":254.17587082958212}],"t0_beta":[{"rmsle":0.39918247475577356,"mae":39.959979295690644},{"rmsle":0.37775398409395794,"mae":42.52347494603311},{"rmsle":0.3958072152067195,"mae":92.60302893779664},{"rmsle":0.40285809011852597,"mae":102.50807844806286},{"rmsle":0.36833207661366385,"mae":54.00234777670937},{"rmsle":0.3959098744748091,"mae":45.14201490321318},{"rmsle":0.36522775198810425,"mae":43.44597206860701},{"rmsle":0.40017193069845103,"mae":42.71787819237342},{"rmsle":0.3832034357775548,"mae":47.98010825807042},{"rmsle":0.36402304997315027,"mae":57.35277930503251},{"rmsle":0.3880403444894518,"mae":60.56543162605126},{"rmsle":0.3965995390531474,"mae":44.465375714927355},{"rmsle":0.38916171408623523,"mae":45.29239238031476},{"rmsle":0.3937104987759244,"mae":39.65587847914245},{"rmsle":0.41808240015899323,"mae":43.62781517708935},{"rmsle":0.39325376866698997,"mae":47.20072601346775}],"t0_beta_promotion":[{"rmsle":0.39029494452870067,"mae":40.71788985675301},{"rmsle":0.3739470930997486,"mae":42.532753859569056},{"rmsle":0.3876005834259261,"mae":102.38146785253274},{"rmsle":0.39784090083865176,"mae":118.32343384275954},{"rmsle":0.36745832995975697,"mae":62.681103190694586},{"rmsle":0.39000190738805707,"mae":50.07448895768104},{"rmsle":0.3566351507113713,"mae":44.90553568253814},{"rmsle":0.3874761375131303,"mae":40.66897764523981},{"rmsle":0.37325652390155395,"mae":46.43665396233102},{"rmsle":0.35582813492651527,"mae":54.065248721630866},{"rmsle":0.37730945575038366,"mae":55.894829810228536},{"rmsle":0.40450317001446795,"mae":42.645363898607116},{"rmsle":0.39314323112035204,"mae":44.16734967885807},{"rmsle":0.3969011900765572,"mae":41.41745309931295},{"rmsle":0.4185697052064121,"mae":43.697774755218674},{"rmsle":0.3947882995431353,"mae":47.93115856937973}]},"promotions":{"t0_beta":{"no_promotion":{"n":15843,"rmsle":0.4497291359256385,"mae":7.502410868981893},"promotion":{"n":12669,"rmsle":0.29812865838721003,"mae":110.04297357928496}},"t0_beta_promotion":{"no_promotion":{"n":15843,"rmsle":0.4508635601260106,"mae":7.629342897185598},"promotion":{"n":12669,"rmsle":0.283882653242286,"mae":114.03340783558222}}}},"validation_2":{"trainEnd":"2017-07-14","scores":[{"model":"seasonal_naive","n":28512,"rmsle":0.5211689523141964,"mae":67.29417776358376},{"model":"weekday_mean","n":28512,"rmsle":0.41697248331691167,"mae":64.02665173229668},{"model":"prophet","n":28512,"rmsle":0.47181950687811613,"mae":81.93475041522527},{"model":"prophet_rigid","n":28512,"rmsle":0.4813308783273632,"mae":99.70846457355094},{"model":"prophet_promotion","n":28512,"rmsle":0.4657646583274699,"mae":101.87482212309273},{"model":"t0_beta","n":28512,"rmsle":0.4035463053136064,"mae":55.58211288368444},{"model":"t0_beta_promotion","n":28512,"rmsle":0.39344324419764154,"mae":55.5771838635063}],"leads":{"weekday_mean":[{"rmsle":0.3793273280063742,"mae":73.58177378542652},{"rmsle":0.39140154811062705,"mae":68.3500942062385},{"rmsle":0.39088315933594453,"mae":46.48471129687828},{"rmsle":0.39967407796227794,"mae":47.3962621926752},{"rmsle":0.4088901975249024,"mae":44.447119637040664},{"rmsle":0.4101399444128792,"mae":45.83930958370526},{"rmsle":0.4118148983537871,"mae":57.634228754438524},{"rmsle":0.4027744962565013,"mae":88.12307526301926},{"rmsle":0.41657637499977224,"mae":101.79142811636065},{"rmsle":0.42380449755121324,"mae":59.797816408536754},{"rmsle":0.4251193628140328,"mae":54.835544338936174},{"rmsle":0.4289098251634243,"mae":55.6399605035697},{"rmsle":0.4396554188581229,"mae":53.75677135497308},{"rmsle":0.43088394280363973,"mae":62.53175528213179},{"rmsle":0.443294831351543,"mae":79.26777996341846},{"rmsle":0.46012416141999685,"mae":84.94879702939797}],"prophet_promotion":[{"rmsle":0.3966968983238779,"mae":98.0044516555683},{"rmsle":0.4135069814963197,"mae":117.30770689980018},{"rmsle":0.4240980339042412,"mae":99.1743592915654},{"rmsle":0.4377933254220789,"mae":79.0656379020646},{"rmsle":0.45087573896569105,"mae":115.3161668071254},{"rmsle":0.45331505886864004,"mae":94.61732446418586},{"rmsle":0.4572749235268348,"mae":86.6437802266785},{"rmsle":0.4444572106633183,"mae":137.98988698685693},{"rmsle":0.45765635372293956,"mae":109.19726958509779},{"rmsle":0.4950354185563843,"mae":96.90818122463965},{"rmsle":0.511212342943958,"mae":85.64189172661904},{"rmsle":0.5070684602798061,"mae":101.21896666975934},{"rmsle":0.5064962914942378,"mae":77.87980890763866},{"rmsle":0.4987528235416383,"mae":90.58583154874826},{"rmsle":0.4907956853500006,"mae":111.98711873999135},{"rmsle":0.4863575577427543,"mae":128.4587713331443}],"t0_beta":[{"rmsle":0.3509083142960021,"mae":50.33014031031665},{"rmsle":0.37235444890306124,"mae":63.080061909778316},{"rmsle":0.37395248951401694,"mae":45.307248807020116},{"rmsle":0.39139526220182774,"mae":42.601531506754846},{"rmsle":0.3954703094968093,"mae":40.48851300680742},{"rmsle":0.39064968847080145,"mae":44.29081038757867},{"rmsle":0.399655932209754,"mae":46.29891567255128},{"rmsle":0.3817627702956447,"mae":63.95555539057275},{"rmsle":0.3888990792796664,"mae":72.26583158125581},{"rmsle":0.40897275879657063,"mae":54.99176349525399},{"rmsle":0.4083982161049344,"mae":43.39304142662416},{"rmsle":0.4185885552513581,"mae":48.11200924927435},{"rmsle":0.4349497675635729,"mae":51.67053399638654},{"rmsle":0.43451895348053426,"mae":67.35560951988133},{"rmsle":0.4336011786915848,"mae":74.9168413659701},{"rmsle":0.4580419350134424,"mae":80.2553985129247}],"t0_beta_promotion":[{"rmsle":0.3436148189115428,"mae":49.29462336397731},{"rmsle":0.36121080674797085,"mae":64.20930363327058},{"rmsle":0.36903112996609794,"mae":48.33289769100596},{"rmsle":0.3806815868087573,"mae":40.363117051051454},{"rmsle":0.3877875431437625,"mae":40.0741502006431},{"rmsle":0.38683330606998156,"mae":41.61550448249137},{"rmsle":0.3927931431492172,"mae":44.545894284520834},{"rmsle":0.37805822649248566,"mae":66.42724541102955},{"rmsle":0.3867064065177192,"mae":67.86613166660928},{"rmsle":0.40381605259047304,"mae":54.92330559031781},{"rmsle":0.4055370308091065,"mae":44.253559596435764},{"rmsle":0.4140663667255326,"mae":51.532077461516785},{"rmsle":0.42414261374950774,"mae":51.74880705669466},{"rmsle":0.41130575915555656,"mae":63.26157554893861},{"rmsle":0.40935006345371266,"mae":76.07122870909686},{"rmsle":0.42979476241448816,"mae":84.715520068501}]},"promotions":{"t0_beta":{"no_promotion":{"n":16878,"rmsle":0.4466599355159476,"mae":9.488751852356936},"promotion":{"n":11634,"rmsle":0.3311672794018119,"mae":122.45195537008169}},"t0_beta_promotion":{"no_promotion":{"n":16878,"rmsle":0.4457514065694122,"mae":9.600125889528575},"promotion":{"n":11634,"rmsle":0.3018517872967832,"mae":122.2782999443724}}}},"holdout":{"trainEnd":"2017-07-30","scores":[{"model":"seasonal_naive","n":28512,"rmsle":0.6170404161294091,"mae":96.53539090179574},{"model":"weekday_mean","n":28512,"rmsle":0.5285925777274655,"mae":82.61096240966587},{"model":"prophet","n":28512,"rmsle":0.505791517575494,"mae":86.32446525310367},{"model":"prophet_rigid","n":28512,"rmsle":0.5200292956608646,"mae":113.67769166811186},{"model":"prophet_promotion","n":28512,"rmsle":0.48376118250080524,"mae":108.53485736232062},{"model":"t0_beta","n":28512,"rmsle":0.4691749496610051,"mae":70.8222308999963},{"model":"t0_beta_promotion","n":28512,"rmsle":0.4131151506881012,"mae":71.4529039932028}],"leads":{"weekday_mean":[{"rmsle":0.4563965485082085,"mae":64.17862782825526},{"rmsle":0.5314735868844858,"mae":141.7419146269707},{"rmsle":0.5403984220478563,"mae":114.46489015861351},{"rmsle":0.5137417987122901,"mae":63.65589207653702},{"rmsle":0.5220505979518465,"mae":62.50015208008406},{"rmsle":0.484288578111147,"mae":66.15004310152644},{"rmsle":0.4896679854390045,"mae":74.77030028573995},{"rmsle":0.5155913918300801,"mae":54.226236752203604},{"rmsle":0.5349061243270998,"mae":53.37550232125232},{"rmsle":0.52640064690019,"mae":57.48102387611861},{"rmsle":0.5313997183541069,"mae":53.87834864044721},{"rmsle":0.5998057767945779,"mae":93.05549859043678},{"rmsle":0.5643054264662706,"mae":155.93438703014365},{"rmsle":0.5352544058565182,"mae":146.89178339035837},{"rmsle":0.5415630313561914,"mae":63.790443163942875},{"rmsle":0.5545755328255368,"mae":55.6803546320238}],"prophet_promotion":[{"rmsle":0.4394702121826311,"mae":76.46462341500064},{"rmsle":0.4819587860273276,"mae":163.34803140571685},{"rmsle":0.4702525571352141,"mae":143.4943945378181},{"rmsle":0.45876620540095325,"mae":103.95618324434815},{"rmsle":0.48498089773293246,"mae":110.95857632970419},{"rmsle":0.4366562095327767,"mae":99.33051468259201},{"rmsle":0.4473665075415918,"mae":139.76493724971922},{"rmsle":0.4743071704400522,"mae":85.22947421775588},{"rmsle":0.48199806564613684,"mae":79.57189240743921},{"rmsle":0.45879691798132377,"mae":83.73931828883543},{"rmsle":0.4720015349003179,"mae":88.44532040740042},{"rmsle":0.5206346676453136,"mae":127.81328131155246},{"rmsle":0.5046273436054778,"mae":133.49552225696166},{"rmsle":0.500416594194326,"mae":106.18887472966786},{"rmsle":0.5417529562134167,"mae":93.34761069972447},{"rmsle":0.5487916057344069,"mae":101.40916261289337}],"t0_beta":[{"rmsle":0.40448938652524485,"mae":52.40113131086495},{"rmsle":0.4486896371258894,"mae":115.87127119378903},{"rmsle":0.4477639573544376,"mae":75.97362195360749},{"rmsle":0.4512022355806572,"mae":49.21853648348058},{"rmsle":0.47246991978413694,"mae":63.034889036119324},{"rmsle":0.4378481625598364,"mae":78.61248775813999},{"rmsle":0.45378948223417825,"mae":77.43750119139398},{"rmsle":0.45656631702524497,"mae":48.60348695722123},{"rmsle":0.482003809338708,"mae":53.24684635409749},{"rmsle":0.45819274737061805,"mae":52.09199003357087},{"rmsle":0.4742315903949179,"mae":50.94113493776091},{"rmsle":0.5239178230107407,"mae":82.81558655727181},{"rmsle":0.5075661184834332,"mae":125.81494994668971},{"rmsle":0.4905463021012463,"mae":103.98154987126959},{"rmsle":0.49221885904450474,"mae":49.7569884254322},{"rmsle":0.4914095334610269,"mae":53.35372238923157}],"t0_beta_promotion":[{"rmsle":0.40023081670245936,"mae":56.25218014945919},{"rmsle":0.42725887750129987,"mae":127.10892531134502},{"rmsle":0.4132382293715625,"mae":86.55098260632671},{"rmsle":0.40392167800133555,"mae":49.65265536661012},{"rmsle":0.42080076244982173,"mae":59.77548935944664},{"rmsle":0.3746067215107854,"mae":64.43049242594711},{"rmsle":0.39974386504034864,"mae":70.70276620930095},{"rmsle":0.396449825890748,"mae":45.59071510258859},{"rmsle":0.42394664444183994,"mae":48.997045274296305},{"rmsle":0.38594759610802226,"mae":53.478147289090316},{"rmsle":0.400772225806056,"mae":54.4558879358649},{"rmsle":0.44929477444936755,"mae":85.90980318977903},{"rmsle":0.43954687730451664,"mae":125.2508630484971},{"rmsle":0.42651128721276854,"mae":110.212466967702},{"rmsle":0.4202639824834031,"mae":50.797564816154306},{"rmsle":0.4203521224244295,"mae":54.08047883883627}]},"promotions":{"t0_beta":{"no_promotion":{"n":16031,"rmsle":0.454810905328243,"mae":9.065617375345314},"promotion":{"n":12481,"rmsle":0.4870034317967058,"mae":150.1444223440857}},"t0_beta_promotion":{"no_promotion":{"n":16031,"rmsle":0.4543036631439373,"mae":9.182683739737987},"promotion":{"n":12481,"rmsle":0.35323409598534206,"mae":151.43478852835975}}}}}
+
+</script>
+<script>
+"use strict";
+
+const benchmark = JSON.parse(document.querySelector("#benchmark-data").textContent);
+const models = {
+  seasonal_naive: { name: "Seasonal naïve", color: "#798982" },
+  weekday_mean: { name: "Weekday mean", color: "#575f80", dash: [2, 4] },
+  prophet: { name: "Prophet", color: "#b57635" },
+  prophet_rigid: { name: "Prophet, less flexible", color: "#b57635" },
+  prophet_promotion: { name: "Prophet + promotions", color: "#a76620", dash: [6, 4] },
+  t0_beta: { name: "t0-beta", color: "#3473a1", dash: [10, 4] },
+  t0_beta_promotion: { name: "t0-beta + promotions", color: "#087566", dash: [] }
+};
+const comparison = ["t0_beta_promotion", "t0_beta", "prophet_promotion", "weekday_mean"];
+const foldInput = document.querySelector("#fold");
+const metricInput = document.querySelector("#metric");
+const chart = document.querySelector("#lead-chart");
+const integer = new Intl.NumberFormat("en-US");
+const dates = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+
+const el = (id) => document.getElementById(id);
+const write = (id, value) => { el(id).textContent = value; };
+const format = (value, metric) => value.toFixed(metric === "rmsle" ? 5 : 2);
+const metricName = (metric) => metric === "rmsle" ? "RMSLE" : "MAE";
+
+function makeCell(tag, text, scope) {
+  const cell = document.createElement(tag);
+  if (scope) cell.scope = scope;
+  cell.textContent = text;
+  return cell;
+}
+
+function makeRow(cells) {
+  const row = document.createElement("tr");
+  row.append(...cells);
+  return row;
+}
+
+function drawRanking(ranking, metric) {
+  const maximum = ranking[ranking.length - 1][metric];
+  const items = ranking.map((result) => {
+    const { name, color } = models[result.model];
+    const item = document.createElement("li");
+    const label = document.createElement("span");
+    label.className = "model-name";
+    label.textContent = name;
+    const track = document.createElement("span");
+    track.className = "track";
+    track.setAttribute("aria-hidden", "true");
+    const fill = document.createElement("span");
+    fill.className = "fill";
+    fill.style.width = `${maximum ? (100 * result[metric]) / maximum : 0}%`;
+    fill.style.background = color;
+    track.append(fill);
+    const value = document.createElement("span");
+    value.className = "metric-value";
+    value.textContent = format(result[metric], metric);
+    item.append(label, track, value);
+    return item;
+  });
+  el("ranking").replaceChildren(...items);
+}
+
+function leadValues(fold, metric) {
+  return comparison.map((model) => fold.leads[model].map((point) => point[metric]));
+}
+
+function drawChart() {
+  const fold = benchmark[foldInput.value];
+  const metric = metricInput.value;
+  const values = leadValues(fold, metric);
+  const width = Math.floor(chart.clientWidth);
+  const height = Math.floor(chart.clientHeight);
+  const ctx = chart.getContext("2d");
+  if (!width || !height || !ctx) return;
+
+  const ratio = window.devicePixelRatio || 1;
+  chart.width = Math.round(width * ratio);
+  chart.height = Math.round(height * ratio);
+  ctx.scale(ratio, ratio);
+  const padding = { top: 12, right: 12, bottom: 40, left: 47 };
+  const plotWidth = width - padding.left - padding.right;
+  const plotHeight = height - padding.top - padding.bottom;
+  const rawMax = Math.max(...values.flat());
+  const base = 10 ** Math.floor(Math.log10(rawMax || 1));
+  const factors = [0.1, 0.2, 0.25, 0.5, 1, 2, 2.5, 5, 10];
+  const step = base * factors.find((candidate) => 4 * base * candidate >= rawMax);
+  const maxY = 4 * step;
+  const x = (index) => padding.left + index * plotWidth / (values[0].length - 1);
+  const y = (value) => padding.top + (1 - value / maxY) * plotHeight;
+
+  ctx.font = "12px system-ui, sans-serif";
+  ctx.fillStyle = "#536664";
+  ctx.textAlign = "right";
+  ctx.textBaseline = "middle";
+  for (let tick = 0; tick <= 4; tick += 1) {
+    const value = tick * step;
+    ctx.strokeStyle = "#dce5de";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(padding.left, y(value));
+    ctx.lineTo(width - padding.right, y(value));
+    ctx.stroke();
+    ctx.fillText(metric === "rmsle" ? value.toFixed(2) : value.toFixed(0), padding.left - 7, y(value));
+  }
+
+  const tickDays = width < 390 ? [1, 4, 8, 12, 16] : [1, 3, 5, 7, 9, 11, 13, 16];
+  ctx.textAlign = "center";
+  tickDays.forEach((day) => ctx.fillText(day, x(day - 1), height - 26));
+  ctx.fillText("Days ahead", padding.left + plotWidth / 2, height - 9);
+
+  [...comparison].reverse().forEach((model) => {
+    const { color, dash } = models[model];
+    const points = values[comparison.indexOf(model)];
+    ctx.strokeStyle = color;
+    ctx.lineWidth = model === "t0_beta_promotion" ? 2.9 : 2;
+    ctx.lineJoin = "round";
+    ctx.setLineDash(dash);
+    ctx.beginPath();
+    points.forEach((point, index) => {
+      if (index === 0) ctx.moveTo(x(index), y(point));
+      else ctx.lineTo(x(index), y(point));
+    });
+    ctx.stroke();
+  });
+}
+
+function drawLeadTable(fold, metric) {
+  const values = leadValues(fold, metric);
+  write("lead-caption", `${metricName(metric)} by forecast lead`);
+  const columns = [makeCell("th", "Day", "col"), ...comparison.map((model) => makeCell("th", models[model].name, "col"))];
+  el("lead-head").replaceChildren(makeRow(columns));
+  const rows = values[0].map((_, index) => makeRow([
+    makeCell("th", index + 1, "row"),
+    ...values.map((series) => makeCell("td", format(series[index], metric)))
+  ]));
+  el("lead-body").replaceChildren(...rows);
+}
+
+function drawPromotionTable(fold, metric) {
+  write("promo-caption", `${metricName(metric)} by promotion status`);
+  const groups = [
+    ["promotion", "Promoted"],
+    ["no_promotion", "Unpromoted"]
+  ];
+  el("promo-body").replaceChildren(...groups.map(([group, label]) => {
+    const history = fold.promotions.t0_beta[group];
+    const promoted = fold.promotions.t0_beta_promotion[group];
+    return makeRow([
+      makeCell("th", label, "row"),
+      makeCell("td", integer.format(history.n)),
+      makeCell("td", format(history[metric], metric)),
+      makeCell("td", format(promoted[metric], metric))
+    ]);
+  }));
+}
+
+function render() {
+  const fold = benchmark[foldInput.value];
+  const metric = metricInput.value;
+  const ranking = [...fold.scores].sort((a, b) => a[metric] - b[metric]);
+  const best = ranking[0];
+  const baseline = ranking.find((row) => row.model === "seasonal_naive")[metric];
+  const improvement = baseline ? 100 * (1 - best[metric] / baseline) : 0;
+  write("window-note", `Forecast origin ${dates.format(new Date(fold.trainEnd))} · 1,782 store–family series`);
+  write("best-label", `Lowest ${metricName(metric)}`);
+  write("best-value", format(best[metric], metric));
+  write("best-model", models[best.model].name);
+  write("improvement", `${improvement.toFixed(1)}%`);
+  write("row-count", integer.format(best.n));
+  write("metric-description", metric === "rmsle"
+    ? "Root mean squared logarithmic error. Lower is better."
+    : "Mean absolute error in sales units. Lower is better.");
+  chart.setAttribute("aria-label", `${metricName(metric)} by day ahead. The exact plotted values are in the next table.`);
+  write("filter-status", `${foldInput.selectedOptions[0].textContent}. ${models[best.model].name} ranks first at ${format(best[metric], metric)} ${metricName(metric)}.`);
+  drawRanking(ranking, metric);
+  drawLeadTable(fold, metric);
+  drawPromotionTable(fold, metric);
+  drawChart();
+}
+
+el("legend").replaceChildren(...comparison.map((model) => {
+  const { name, color, dash } = models[model];
+  const item = document.createElement("li");
+  const mark = document.createElement("span");
+  mark.className = "legend-mark";
+  mark.style.borderColor = color;
+  mark.style.borderTopStyle = dash.length ? "dashed" : "solid";
+  mark.setAttribute("aria-hidden", "true");
+  item.append(mark, name);
+  return item;
+}));
+foldInput.addEventListener("change", render);
+metricInput.addEventListener("change", render);
+if ("ResizeObserver" in window) new ResizeObserver(drawChart).observe(chart);
+else window.addEventListener("resize", drawChart);
+render();
+</script>
+</body>
+</html>

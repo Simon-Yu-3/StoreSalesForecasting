@@ -2,7 +2,7 @@
 
 A retail analytics project that compares a time-series foundation model with conventional forecasts to support replenishment planning at Corporación Favorita.
 
-[Research report](files/store-sales-research-report.pdf) · [Interactive dashboard](files/forecast-dashboard.html) · [Executed notebook](project.ipynb) · [Experiment record](files/experiment-plan.md) · [Reproduction](#reproduce-the-analysis)
+[Research report](files/store-sales-research-report.pdf) · [Interactive dashboard](files/forecast-dashboard.html) · [Executed notebook](project.ipynb) · [Pooled model follow-up](files/global-model-comparison.md) · [Experiment record](files/experiment-plan.md) · [Reproduction](#reproduce-the-analysis)
 
 ## Business problem
 
@@ -20,6 +20,10 @@ A grocery retailer needs to plan inventory before the next promotion cycle. A st
 | Inventory tradeoff | t0-beta with promotions had a lower RMSLE and **0.63 units higher MAE** than history-only t0-beta. A replenishment pilot should evaluate both forecast accuracy and inventory outcomes. |
 
 These are backtests on the labeled competition data. The repository records the archived data checksums and the pinned model checkpoint. [Results by model and window](files/official-results/scores.csv) · [Run manifest](files/official-results/manifest.json)
+
+## Stronger conventional comparison
+
+A pooled gradient-boosting model learns across stores and families. With promotion inputs matched, it led the two pooled development windows at **0.38464 RMSLE** versus **0.38959** for t0-beta. On the later historical window, t0-beta led **0.41312 to 0.41904**, a **1.4%** gap. Its earlier comparison with Prophet gave a **14.6%** gap. The follow-up also separates 16-day underforecasts and overforecasts to show how error direction changes with promotion inputs. [Follow-up report and reproducible results](files/global-model-comparison.md)
 
 ## Explore the analysis
 

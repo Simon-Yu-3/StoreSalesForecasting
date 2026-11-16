@@ -105,6 +105,11 @@ def _forecast(panel, model, train_end, forecast_dates, foundation, jobs):
 def _submission(panel, model, foundation, jobs):
     dates = panel.dates[panel.dates > panel.train_end]
     predictions = _forecast(panel, model, panel.train_end, dates, foundation, jobs)
+    return submission_frame(panel, dates, predictions)
+
+
+def submission_frame(panel, dates, predictions):
+    """Map a complete forecast matrix to the original Kaggle test IDs."""
     if not np.isfinite(predictions).all() or (predictions < 0).any():
         raise ValueError("Submission must contain finite nonnegative forecasts.")
     test = panel.test

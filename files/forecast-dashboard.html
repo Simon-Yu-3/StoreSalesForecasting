@@ -26,6 +26,7 @@ body { margin: 0; }
 .hero h1 { margin: 0 0 10px; max-width: 19ch; font-size: clamp(2.25rem, 5vw, 3.65rem); font-weight: 700; letter-spacing: -.06em; line-height: 1.04; }
 .hero p { margin: 0; max-width: 64ch; color: #d9e8e1; line-height: 1.57; }
 main { padding-block: 24px 48px; }
+.section-heading { margin-bottom: 12px; }
 .controls { display: flex; flex-wrap: wrap; align-items: end; gap: 10px 14px; margin-bottom: 18px; }
 label { display: grid; gap: 5px; font-size: .81rem; font-weight: 700; }
 select { font: inherit; font-size: .91rem; font-weight: 550; color: var(--ink); background: var(--paper); border: 1px solid #a8b9b3; border-radius: 7px; padding: 9px 12px; min-height: 44px; max-width: 100%; }
@@ -65,6 +66,12 @@ th { font-weight: 650; }
 .insights thead th { white-space: normal; }
 .planning { color: var(--ink); }
 .planning p { margin: 9px 0 0; font-size: .91rem; line-height: 1.6; }
+.followup { margin-top: 28px; }
+.followup .section-heading { margin-bottom: 4px; }
+.followup h3 { margin: 0; font-size: 1rem; }
+.followup th { white-space: normal; }
+.followup .best-score { color: #086658; font-weight: 750; }
+.followup .table-note { margin: 11px 0 0; }
 footer { margin: 26px 0 0; color: var(--muted); font-size: .79rem; line-height: 1.65; }
 footer a { color: #145f56; text-underline-offset: 2px; }
 noscript { display: block; margin: 12px 0; color: #614926; }
@@ -98,7 +105,8 @@ noscript { display: block; margin: 12px 0; color: #614926; }
   </div>
 </header>
 <main class="wrap">
-  <form class="controls" aria-label="Benchmark filters">
+  <h2 id="original-title" class="section-heading">Original seven-model benchmark</h2>
+  <form class="controls" aria-label="Original benchmark filters">
     <label for="fold">Forecast window
       <select id="fold">
         <option value="validation_1">Development 1 · Jun 29–Jul 14</option>
@@ -115,7 +123,7 @@ noscript { display: block; margin: 12px 0; color: #614926; }
     <p class="window-note" id="window-note">Forecast origin July 30, 2017 · 1,782 store–family series</p>
   </form>
 
-  <section class="summary-strip" aria-label="Selected benchmark summary">
+  <section class="summary-strip" aria-label="Selected results from the original seven models">
     <div class="stat">
       <p class="label" id="best-label">Lowest RMSLE</p>
       <p class="number" id="best-value">0.41312</p>
@@ -176,9 +184,47 @@ noscript { display: block; margin: 12px 0; color: #614926; }
     <section class="card planning" aria-labelledby="planning-title">
       <h2 id="planning-title">Planning implication</h2>
       <p>On the final holdout, adding promotions to t0-beta reduced RMSLE from <strong>0.46917 to 0.41312</strong> and increased MAE from <strong>70.82 to 71.45 units</strong>.</p>
-      <p>If the 16-day schedule is available at forecast time, test the promotion-aware model against a low-cost weekday baseline. Track unit errors and availability alongside RMSLE before using forecasts to order inventory.</p>
+      <p>If the 16-day schedule is available at forecast time, compare promotion-aware forecasts with a low-cost weekday baseline. Track unit errors and availability alongside RMSLE before using forecasts to order inventory.</p>
     </section>
   </div>
+  <section class="followup" aria-labelledby="followup-title">
+    <h2 id="followup-title" class="section-heading">Follow-up with pooled gradient boosting</h2>
+    <p class="note">Histogram gradient boosting (HGB) learns across all stores and families using calendar features and sales history available at each origin. The optional promotion input uses the forecast-date schedule.</p>
+    <div class="grid">
+      <section class="card" aria-labelledby="followup-accuracy-title">
+        <h3 id="followup-accuracy-title">RMSLE on the same windows</h3>
+        <table id="followup-accuracy">
+          <caption class="sr-only">Pooled development and holdout RMSLE for HGB, t0-beta and Prophet</caption>
+          <thead>
+            <tr><th scope="col">Model</th><th scope="col">Pooled development</th><th scope="col">Jul 31–Aug 15 holdout</th></tr>
+          </thead>
+          <tbody>
+            <tr data-model="global_hgb"><th scope="row">Pooled HGB</th><td>0.39564</td><td>0.49982</td></tr>
+            <tr data-model="global_hgb_promotion"><th scope="row">Pooled HGB + promotions</th><td class="best-score">0.38464</td><td>0.41904</td></tr>
+            <tr data-model="t0_beta"><th scope="row">t0-beta</th><td>0.39669</td><td>0.46917</td></tr>
+            <tr data-model="t0_beta_promotion"><th scope="row">t0-beta + promotions</th><td>0.38959</td><td class="best-score">0.41312</td></tr>
+            <tr data-model="prophet"><th scope="row">Prophet</th><td>0.46520</td><td>0.50579</td></tr>
+            <tr data-model="prophet_promotion"><th scope="row">Prophet + promotions</th><td>0.46448</td><td>0.48376</td></tr>
+          </tbody>
+        </table>
+        <p class="note table-note">HGB with promotions led the pooled development score. t0-beta with promotions had the lowest error on the final window. The HGB follow-up reused an already reviewed holdout, so this is a retrospective comparison.</p>
+      </section>
+      <section class="card" aria-labelledby="followup-units-title">
+        <h3 id="followup-units-title">Holdout underforecast and overforecast</h3>
+        <table id="followup-units">
+          <caption class="sr-only">HGB holdout underforecast and overforecast units by promotion input</caption>
+          <thead>
+            <tr><th scope="col">Model</th><th scope="col">Underforecast units</th><th scope="col">Overforecast units</th></tr>
+          </thead>
+          <tbody>
+            <tr data-model="global_hgb"><th scope="row">Pooled HGB</th><td>484,057</td><td>895,517</td></tr>
+            <tr data-model="global_hgb_promotion"><th scope="row">Pooled HGB + promotions</th><td>384,911</td><td>907,169</td></tr>
+          </tbody>
+        </table>
+        <p class="note table-note">Compare each store–family’s 16-day forecast total with observed sales, then sum gaps in each direction. Promotion inputs lowered underforecast units and raised overforecast units. These gaps describe forecast error against recorded sales. Stockout and inventory costs require operating data.</p>
+      </section>
+    </div>
+  </section>
   <footer>
     Results are local backtests on observed 2017 sales. The final Kaggle test window is unlabeled in the downloaded data. The promotion comparison assumes the full schedule was known at forecast time.
     <br><a href="../project.ipynb">Project notebook</a> · <a href="experiment-plan.md">Experiment plan</a> · <a href="official-results/scores.csv">Score data</a> · <a href="official-results/slices.csv">Slice data</a>

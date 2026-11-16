@@ -1,0 +1,49 @@
+{
+  "data": {
+    "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+    "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+    "synthetic": false,
+    "files": {
+      "train.csv": {
+        "rows": 3000888,
+        "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+      },
+      "test.csv": {
+        "rows": 28512,
+        "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+      },
+      "sample_submission.csv": {
+        "rows": 28512,
+        "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+      }
+    },
+    "missing_training_dates": [
+      "2013-12-25",
+      "2014-12-25",
+      "2015-12-25",
+      "2016-12-25"
+    ]
+  },
+  "settings": {
+    "loss": "squared_error",
+    "learning_rate": 0.1,
+    "max_iter": 150,
+    "max_leaf_nodes": 43,
+    "min_samples_leaf": 40,
+    "l2_regularization": 1.0,
+    "max_bins": 127,
+    "early_stopping": false,
+    "random_state": 481
+  },
+  "origin_stride_days": 15,
+  "context_days": 512,
+  "horizon": 16,
+  "runtime": {
+    "python": "3.13.5",
+    "numpy": "2.1.3",
+    "pandas": "2.2.3",
+    "scikit_learn": "1.6.1",
+    "omp_threads": "4"
+  },
+  "evaluation": "Retrospective extension on the original benchmark windows."
+}

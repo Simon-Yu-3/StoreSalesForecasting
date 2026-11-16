@@ -28,6 +28,10 @@ For each run, keep the data source and file hashes, run command, exact date wind
 
 The analysis describes one Ecuadorian retailer and a short historical period. The sales records may reflect availability constraints and do not directly observe demand. Assess performance variation by window, forecast lead, promotion status, or sales volume where supported. Interpret differences in relation to the operational assumptions, compute costs, and available pretraining disclosures.
 
+## Follow-up comparison
+
+After examining the original benchmark, a separate experiment tested a pooled conventional model against the existing Prophet and t0-beta results. The pooled model uses fixed histogram gradient boosting settings and the same 16-day scoring rows. The [follow-up report](global-model-comparison.md) records the experiment, the forecast-origin leakage check, and the retrospective interpretation.
+
 ## Academic transparency
 
 Codex assisted with course-source review, benchmark design, implementation, tests, and draft documentation. Review the final artifacts and record the student's actual contributions and interpretation before submission. Identify results with their generating runs and cite borrowed methods, libraries, and data. The course's public guidance records the project and submission workflow. Check any additional course-specific disclosure directions in the student repository or course communications. [Course projects](https://eisenhauerio.github.io/courses-business-decisions/projects/index.html) · [Autumn 2026 course instructions](https://eisenhauerio.github.io/courses-business-decisions/iterations/index.html)

@@ -1,0 +1,151 @@
+{
+  "protocol_version": 1,
+  "analysis": "Retrospective calendar ablation. The frozen model selection is unchanged.",
+  "data": {
+    "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+    "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+    "synthetic": false,
+    "files": {
+      "train.csv": {
+        "rows": 3000888,
+        "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+      },
+      "test.csv": {
+        "rows": 28512,
+        "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+      },
+      "sample_submission.csv": {
+        "rows": 28512,
+        "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+      }
+    },
+    "missing_training_dates": [
+      "2013-12-25",
+      "2014-12-25",
+      "2015-12-25",
+      "2016-12-25"
+    ]
+  },
+  "calendar_source_files": {
+    "stores.csv": {
+      "rows": 54,
+      "sha256": "af503b2bce11d7906d249f81cc0598f10e2addcc9f6c59aa2d95c9f2652c296b"
+    },
+    "holidays_events.csv": {
+      "rows": 350,
+      "sha256": "81a183d6c4d691b57f84a0fde6bbf734a5b3c36a74b97378bf33a592648e2999"
+    }
+  },
+  "selection_manifest_sha256": "c9bb3fd6237e603ae9ca108701310d44fe9526de10f510cbd5c9c13994797a7c",
+  "hgb_configuration": "reference",
+  "hgb_settings": {
+    "loss": "squared_error",
+    "learning_rate": 0.1,
+    "max_iter": 150,
+    "max_leaf_nodes": 43,
+    "min_samples_leaf": 40,
+    "l2_regularization": 1.0,
+    "max_bins": 127,
+    "early_stopping": false,
+    "random_state": 481
+  },
+  "folds": [
+    {
+      "fold": "development_1",
+      "role": "development",
+      "train_end": "2016-06-30",
+      "forecast_start": "2016-07-01",
+      "forecast_end": "2016-07-16"
+    },
+    {
+      "fold": "development_2",
+      "role": "development",
+      "train_end": "2016-08-15",
+      "forecast_start": "2016-08-16",
+      "forecast_end": "2016-08-31"
+    },
+    {
+      "fold": "development_3",
+      "role": "development",
+      "train_end": "2016-10-31",
+      "forecast_start": "2016-11-01",
+      "forecast_end": "2016-11-16"
+    },
+    {
+      "fold": "development_4",
+      "role": "development",
+      "train_end": "2016-12-08",
+      "forecast_start": "2016-12-09",
+      "forecast_end": "2016-12-24"
+    },
+    {
+      "fold": "development_5",
+      "role": "development",
+      "train_end": "2017-02-28",
+      "forecast_start": "2017-03-01",
+      "forecast_end": "2017-03-16"
+    },
+    {
+      "fold": "development_6",
+      "role": "development",
+      "train_end": "2017-03-31",
+      "forecast_start": "2017-04-01",
+      "forecast_end": "2017-04-16"
+    },
+    {
+      "fold": "evaluation_1",
+      "role": "evaluation",
+      "train_end": "2017-04-30",
+      "forecast_start": "2017-05-01",
+      "forecast_end": "2017-05-16"
+    },
+    {
+      "fold": "evaluation_2",
+      "role": "evaluation",
+      "train_end": "2017-05-16",
+      "forecast_start": "2017-05-17",
+      "forecast_end": "2017-06-01"
+    },
+    {
+      "fold": "evaluation_3",
+      "role": "evaluation",
+      "train_end": "2017-06-12",
+      "forecast_start": "2017-06-13",
+      "forecast_end": "2017-06-28"
+    }
+  ],
+  "models": {
+    "global_hgb_future_promotion": [],
+    "global_hgb_future_promotion_holidays": [
+      "national_holiday",
+      "regional_holiday",
+      "local_holiday",
+      "holiday_bridge",
+      "substitute_workday"
+    ],
+    "global_hgb_future_promotion_payday": [
+      "public_sector_payday"
+    ],
+    "global_hgb_future_promotion_calendar": [
+      "national_holiday",
+      "regional_holiday",
+      "local_holiday",
+      "holiday_bridge",
+      "substitute_workday",
+      "public_sector_payday"
+    ]
+  },
+  "assumption": "The public calendar supplied with the competition approximates information available at the forecast origin. Announcement dates and contemporaneous schedule versions are unavailable.",
+  "payday_rule": "Public-sector salary schedule reported by Kaggle, the 15th and month end.",
+  "artifact_sha256": {
+    "scores.csv": "9f548464daebd58a49b4ff2b29d40147e622f0919ce5eeeb87b275071677328c",
+    "slices.csv": "cfa6c6d499050f26bb97fda4a4a54b3eb498ddf76d078eac4b04dcf68cf0597b"
+  },
+  "runtime": {
+    "python": "3.13.5",
+    "numpy": "2.1.3",
+    "pandas": "2.2.3",
+    "scikit_learn": "1.6.1",
+    "omp_threads": "4"
+  }
+}

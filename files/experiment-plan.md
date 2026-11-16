@@ -22,6 +22,30 @@ On October 23, 2026, Professor Philipp Eisenhauer approved the Store Sales topic
 
 Prophet represents a conventional fitted approach, using trend and seasonality components. The Forecasting Company's open-weight `t0-beta` is a decoder-style patch transformer pretrained for time-series forecasts and can condition on known-future covariates. Use frozen model weights and log the checkpoint revision, runtime, context length, device, and point-forecast rule. The model authors report that the beta training corpora excluded fev-bench datasets and disclose that alpha overlapped with Favorita. Favorita appears in fev-bench, so verify overlap for any further checkpoint before interpreting transfer performance. [Prophet](https://github.com/meta/prophet) · [t0-beta model card](https://huggingface.co/theforecastingcompany/t0-beta) · [t0 technical report, §5.1.2](https://arxiv.org/pdf/2609.24559) · [fev-bench dataset](https://github.com/autogluon/fev)
 
+## Expanded evaluation protocol
+
+The original experiment and pooled-tree follow-up compared models on contiguous June–August 2017 windows. The pooled tree was introduced after that study's last window had been examined. The follow-up motivates this new comparison of predefined dates and model configurations.
+
+| Role | Train through | Predict |
+| --- | --- | --- |
+| Development 1 | 2016-06-30 | 2016-07-01 through 2016-07-16 |
+| Development 2 | 2016-08-15 | 2016-08-16 through 2016-08-31 |
+| Development 3 | 2016-10-31 | 2016-11-01 through 2016-11-16 |
+| Development 4 | 2016-12-08 | 2016-12-09 through 2016-12-24 |
+| Development 5 | 2017-02-28 | 2017-03-01 through 2017-03-16 |
+| Development 6 | 2017-03-31 | 2017-04-01 through 2017-04-16 |
+| Evaluation 1 | 2017-04-30 | 2017-05-01 through 2017-05-16 |
+| Evaluation 2 | 2017-05-16 | 2017-05-17 through 2017-06-01 |
+| Evaluation 3 | 2017-06-12 | 2017-06-13 through 2017-06-28 |
+
+The six development windows span several months and include the same August dates as the competition in the preceding year. Evaluation uses three later 16-day windows whose forecast dates precede the original June–August scoring windows. These are historical, single-retailer estimates. The August 2017 competition file supplies a separate set of future covariates and test IDs for external scoring by Kaggle.
+
+Tune the promotion-aware pooled tree using three configurations. The reference uses 43 maximum leaves and an L2 penalty of 1.0. The regularized configuration uses 31 leaves and an L2 penalty of 3.0. The flexible configuration uses 63 leaves and an L2 penalty of 0.5. The learning rate, 150 boosting iterations, and other settings are common across configurations. Select by pooled development RMSLE, weighting each row equally before taking the square root. Fix the selected hyperparameters across the three promotion variants so that changes measure the predictive value of inputs. Compare the development scores of the final candidates to select the competition configuration. The three evaluation windows check how that choice transfers. The experiment script and run manifest record the exact settings and result hashes.
+
+The tree variants use the same sales history, store and family identifiers, and calendar features. The first uses these predictors alone. The second adds trailing promotion counts available at the forecast origin. The third also adds the target day's known-future promotion count. The history-only versus known-future comparison measures the incremental forecasting value of the supplied schedule under the assumption that it was available at the cutoff. Earlier Prophet and t0-beta variants added past and future promotion counts together, so their historical differences measure the joint contribution. [Pooled tree implementation](../auxiliary/global_benchmark.py) · [Expanded runner](../auxiliary/final_experiment.py)
+
+Compare signed errors and 16-day shortfalls and excesses by window. To show how the choice depends on the ordering objective, apply several assumed ratios of underforecast cost to overforecast cost to those directional errors. These are forecast losses on observed sales. Estimating inventory outcomes calls for reorder constraints, actual inventory, and stockout or waste data.
+
 ## Results and provenance
 
 For each run, keep the data source and file hashes, run command, exact date windows, model settings, dependency versions, and execution status. The elapsed seconds in `scores.csv` cover model fitting and forecasting for Prophet and inference for t0-beta. The t0-beta checkpoint is loaded before the timing starts. The notebook documents how to recreate expensive computations. It can read a compact bundle of aggregate results from `files/official-results` if the competition rules permit publishing those artifacts. Fixture runs support implementation verification. Report empirical conclusions using the official competition data. [Course workflow](https://eisenhauerio.github.io/courses-business-decisions/projects/github-workflow.html)
@@ -34,4 +58,4 @@ After examining the original benchmark, a separate experiment tested a pooled co
 
 ## Academic transparency
 
-Codex assisted with course-source review, benchmark design, implementation, tests, and draft documentation. Review the final artifacts and record the student's actual contributions and interpretation before submission. Identify results with their generating runs and cite borrowed methods, libraries, and data. The course's public guidance records the project and submission workflow. Check any additional course-specific disclosure directions in the student repository or course communications. [Course projects](https://eisenhauerio.github.io/courses-business-decisions/projects/index.html) · [Autumn 2026 course instructions](https://eisenhauerio.github.io/courses-business-decisions/iterations/index.html)
+The study grew out of the Store Sales project proposal and the instructor's recommendation to compare conventional forecasts with a time-series foundation model. Codex assisted with course-source review, experiment design, code and tests, benchmark execution and verification, and revisions to the documentation and notebook. The implementation, configuration, and artifacts identify which runs produced the empirical results. [Course projects](https://eisenhauerio.github.io/courses-business-decisions/projects/index.html) · [Autumn 2026 course instructions](https://eisenhauerio.github.io/courses-business-decisions/iterations/index.html)

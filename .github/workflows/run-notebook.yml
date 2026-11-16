@@ -2,21 +2,34 @@ name: Run Notebook
 
 on:
   push:
-    branches: [main]
+    branches: ['**']
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      full_experiment:
+        description: Regenerate official Kaggle results using the repository's KAGGLE_API_TOKEN secret
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
 
 jobs:
   run-notebook:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OMP_NUM_THREADS: '2'
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Setup Micromamba
-        uses: mamba-org/setup-micromamba@v2
+        uses: mamba-org/setup-micromamba@v3
         with:
           environment-file: environment.yml
 
@@ -26,7 +39,101 @@ jobs:
           ruff check .
           ruff format --check .
 
-      - name: Run verification tests and notebook
+      - name: Run verification tests
         shell: micromamba-shell {0}
         run: |
-          python -m pytest --nbmake tests project.ipynb
+          python -m pytest tests
+
+      - name: Generate deterministic fixture results
+        shell: micromamba-shell {0}
+        run: |
+          python -m auxiliary.final_experiment --fixture --output-dir results/final-fixture
+
+      - name: Execute notebook with generated fixture results
+        shell: micromamba-shell {0}
+        env:
+          ECON481_RESULTS: results/final-fixture
+        run: python -m pytest --nbmake project.ipynb
+
+      - name: Execute notebook with bundled official results
+        shell: micromamba-shell {0}
+        env:
+          ECON481_RESULTS: files/final-results
+        run: python -m pytest --nbmake project.ipynb
+
+  full-experiment:
+    if: github.event_name == 'workflow_dispatch' && inputs.full_experiment
+    needs: run-notebook
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      OMP_NUM_THREADS: '2'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup Micromamba
+        uses: mamba-org/setup-micromamba@v3
+        with:
+          environment-file: environment.yml
+
+      - name: Install CPU inference dependencies
+        shell: micromamba-shell {0}
+        run: |
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch==2.15.0
+          python -m pip install -r requirements-t0.txt
+          python -m pip check
+
+      - name: Install Kaggle CLI in an isolated environment
+        shell: micromamba-shell {0}
+        run: |
+          python -m venv "$RUNNER_TEMP/kaggle-cli"
+          "$RUNNER_TEMP/kaggle-cli/bin/python" -m pip install kaggle==2.2.5
+
+      - name: Download competition archive
+        env:
+          KAGGLE_API_TOKEN: ${{ secrets.KAGGLE_API_TOKEN }}
+        run: |
+          if [[ -z "$KAGGLE_API_TOKEN" ]]; then
+            echo "Set the KAGGLE_API_TOKEN repository secret before running the full experiment."
+            exit 1
+          fi
+          mkdir -p data/raw
+          "$RUNNER_TEMP/kaggle-cli/bin/kaggle" competitions download \
+            store-sales-time-series-forecasting --path data/raw
+
+      - name: Regenerate the Prophet and T0 forecasts
+        shell: micromamba-shell {0}
+        run: |
+          archive=data/raw/store-sales-time-series-forecasting.zip
+          python -m auxiliary.final_experiment --data "$archive" \
+            --model-shard prophet_promotion --output-dir results/final-cache --jobs 2
+          python -m auxiliary.final_experiment --data "$archive" \
+            --model-shard t0_beta_promotion --output-dir results/final-cache --device cpu
+
+      - name: Regenerate competition results
+        shell: micromamba-shell {0}
+        run: |
+          python -m auxiliary.final_experiment \
+            --data data/raw/store-sales-time-series-forecasting.zip \
+            --prediction-cache results/final-cache --output-dir results/final
+
+      - name: Execute notebook with regenerated results
+        shell: micromamba-shell {0}
+        env:
+          ECON481_RESULTS: results/final
+        run: python -m pytest --nbmake project.ipynb
+
+      - name: Upload aggregate results and manifest
+        uses: actions/upload-artifact@v7
+        with:
+          name: official-experiment-aggregates
+          if-no-files-found: error
+          path: |
+            results/final/manifest.json
+            results/final/scores.csv
+            results/final/slices.csv
+            results/final/tuning.csv

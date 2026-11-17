@@ -4,7 +4,9 @@
 
 A replenishment planner needs 16 days of forecasts before the next ordering cycle. For Ecuadorian grocer Corporación Favorita, we compare seasonal baselines, independently fitted Prophet models, a pooled gradient-boosted tree, and the pretrained t0-beta time-series model. Within the pooled tree, we test the incremental predictive value of a future promotion schedule after accounting for prior promotions.
 
-[Executed project notebook](project.ipynb) · [Data exploration](#explore-the-data) · [Holiday and payday follow-up](#holiday-and-payday-follow-up) · [Reproduce](#reproduce-the-analysis)
+[Executed project notebook](project.ipynb) · [Kaggle results](#kaggle-results) · [Data exploration](#explore-the-data) · [Reproduce](#reproduce-the-analysis)
+
+The project's best Kaggle submission scored **0.43811 RMSLE**. A blend of calendar HGB and t0-beta reduced the first submission's error by **7.2%** on the same 28,512 test rows. In the historical study, the value of the promotion schedule was concentrated in promoted observations, and its effect on shortages and excesses varied by window. [Kaggle results and model recipe](#kaggle-results)
 
 ## Findings
 
@@ -85,11 +87,20 @@ The competition records stores' cities and states, the dates when holidays were 
 | Payday on the 15th and at month-end | 0.52199 | 0.41506 |
 | Holidays and payday | 0.52162 | **0.40885** |
 
-The combined features improved evaluation RMSLE by **1.8%**, with better results in **two of three** evaluation windows. The holiday-affected rows were **6.5%** of the evaluation panel and accounted for about **64%** of the net reduction in squared log error. Every augmented variant scored worse on pooled development RMSLE. This follow-up reuses historical windows after the main comparison, so the competition export still uses the original development-selected HGB. [Calendar scores](files/calendar-results/scores.csv) · [Holiday and payday slices](files/calendar-results/slices.csv)
+The combined features improved evaluation RMSLE by **1.8%**, with better results in **two of three** evaluation windows. The holiday-affected rows were **6.5%** of the evaluation panel and accounted for about **64%** of the net reduction in squared log error. Every augmented variant scored worse on pooled development RMSLE. The study retains its original HGB selection, and the calendar variant is revisited in the competition follow-up below. [Calendar scores](files/calendar-results/scores.csv) · [Holiday and payday slices](files/calendar-results/slices.csv)
 
-## Kaggle submission
+## Kaggle results
 
-The final runner refits HGB with scheduled promotions and exports 28,512 nonnegative predictions aligned to the sample submission IDs. Its submission manifest records the model, test dates, and prediction file hash. An official Kaggle score is pending. [Competition evaluation](https://www.kaggle.com/c/store-sales-time-series-forecasting)
+| Submitted | Forecast model | Official test RMSLE |
+| --- | --- | ---: |
+| November 16, 2026 | HGB with past and scheduled promotions | 0.47212 |
+| November 17, 2026 | 75% calendar HGB + 25% promotion-aware t0-beta | **0.43811** |
+
+Both submissions predict August 16–31, 2017. The blend averages `log1p` sales predictions and uses `expm1` to recover sales units. The HGB component adds effective holidays and public-sector paydays to the features used for the first submission. The t0-beta component uses the same pretrained checkpoint and promotion inputs as the main study. [Kaggle submission history](https://www.kaggle.com/competitions/store-sales-time-series-forecasting/submissions) · [Recorded scores and checksums](files/competition-results/manifest.json)
+
+Weights were compared on three May–June windows using pooled RMSLE. The selected recipe scored **0.40462** versus **0.41636** for the first model. With its weights fixed, the blend improved all three later historical windows, reducing pooled RMSLE from **0.39644 to 0.38903**. These dates had already been used in the earlier benchmark, so the later-window comparison is a retrospective check. Kaggle scores both files on a separate period after August 15. [Weight grid](files/competition-results/blend-weight-scores.csv) · [Six historical comparisons](files/competition-results/backtest.csv)
+
+On those later historical windows, pooled WAPE fell from **13.55% to 12.46%**. That measure sums the absolute sales-unit errors and divides by total recorded sales. An inventory pilot would still need to measure stockouts, waste, and ordering costs. [Forecast errors and sales totals by window](files/competition-results/backtest.csv)
 
 ## Reproduce the analysis
 
@@ -137,6 +148,29 @@ python -m auxiliary.plot_evaluation
 python -m auxiliary.calendar_experiment --data "$data" \
   --selection-manifest files/final-results/manifest.json --output-dir results/calendar
 ECON481_CALENDAR_RESULTS=results/calendar python -m pytest --nbmake project.ipynb
+```
+
+### Regenerate the second Kaggle submission
+
+Use the Kaggle archive and inference environment above. Each command runs in its own Python process. The last command checks test IDs and combines the two forecast files. The archived manifest identifies the actual submitted file by SHA-256.
+
+```bash
+data=data/raw/store-sales-time-series-forecasting.zip
+run_dir=results/competition-v2
+python -m auxiliary.competition_ensemble calendar_hgb --data "$data" --output-dir "$run_dir"
+python -m auxiliary.competition_ensemble t0_beta --data "$data" --output-dir "$run_dir"
+python -m auxiliary.competition_ensemble blend --data "$data" --output-dir "$run_dir"
+```
+
+The predictions are written to `results/competition-v2/submission.csv`. The run also records the test dates, blend weights, and forecast checksums. A fresh CPU run reproduced the submitted CSV byte for byte in the recorded software environment.
+
+Run the historical stages below to refit the components at all six cutoffs and reproduce the blend weight search. The `evaluate` stage writes the selection and later-window RMSLE for each recipe from the cached forecasts.
+
+```bash
+backtest_dir=results/competition-v2-backtest
+python -m auxiliary.competition_backtest hgb --data "$data" --output-dir "$backtest_dir"
+python -m auxiliary.competition_backtest t0 --data "$data" --output-dir "$backtest_dir"
+python -m auxiliary.competition_backtest evaluate --data "$data" --output-dir "$backtest_dir"
 ```
 
 ## Earlier experiments

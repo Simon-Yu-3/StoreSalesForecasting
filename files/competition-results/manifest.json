@@ -1,0 +1,57 @@
+{
+  "competition_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting",
+  "submissions_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/submissions",
+  "test_start": "2017-08-16",
+  "test_end": "2017-08-31",
+  "rows": 28512,
+  "metric": "RMSLE",
+  "selection_manifest_sha256": "c9bb3fd6237e603ae9ca108701310d44fe9526de10f510cbd5c9c13994797a7c",
+  "backtest_sha256": "b6eac65d07adeb76ed8f123848504596952ef59218077ebd429f73bcb8c91696",
+  "blend_weight_scores_sha256": "f60e9d4d0d84908946b74f41e1900b7e3e4444f95fdfb9ccc97a9586946e78d5",
+  "submission_records": [
+    {
+      "version": "v1",
+      "submitted_on": "2026-11-16",
+      "kaggle_rmsle": 0.47212,
+      "filename": "StoreSalesForecasting-HGB-submission.csv",
+      "sha256": "be019fedc5825c71e63081f52a016e66cabb1273d87b70d4c45825c6ed9595a2",
+      "model": "HGB with historical and scheduled promotions"
+    },
+    {
+      "version": "v2",
+      "submitted_on": "2026-11-17",
+      "kaggle_rmsle": 0.43811,
+      "filename": "StoreSalesForecasting-HGB-T0-v2-submission.csv",
+      "sha256": "05498d85b1f428c813eb34464bbb77cbf083b6e568422477cfd2c291eef768f1",
+      "model": "Calendar HGB and promotion-aware t0-beta ensemble"
+    }
+  ],
+  "blend": {
+    "calendar_hgb_weight": 0.75,
+    "t0_beta_weight": 0.25,
+    "scale": "log1p sales",
+    "weights_tested": [
+      0,
+      0.25,
+      0.5,
+      0.75,
+      1
+    ],
+    "hgb_components_tested": [
+      "submitted",
+      "calendar"
+    ],
+    "inputs_sha256": {
+      "calendar_hgb": "343ae74137bb0bd49d61332e299a64b280f1249d9909dfc2264c92fbe003f1c4",
+      "t0_beta_promotion": "1278945f23e34dc768a23f98c8f5f6250539cfa55865e179f5c26c6928676e7c"
+    },
+    "t0_checkpoint": {
+      "model_id": "theforecastingcompany/t0-beta",
+      "revision": "941e522547ec63f0f2aad57089fa0f5b8498bdf8"
+    }
+  },
+  "evaluation": {
+    "selection_rule": "Minimum pooled RMSLE across the three May and June 2017 historical windows.",
+    "later_check": "Three subsequent, previously examined 16-day backtests, checked with the selected recipe fixed."
+  }
+}

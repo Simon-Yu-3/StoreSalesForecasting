@@ -121,10 +121,30 @@ jobs:
             --data data/raw/store-sales-time-series-forecasting.zip \
             --prediction-cache results/final-cache --output-dir results/final
 
+      - name: Regenerate descriptive and calendar results
+        shell: micromamba-shell {0}
+        run: |
+          archive=data/raw/store-sales-time-series-forecasting.zip
+          python -m auxiliary.data_profile --data "$archive" --output-dir results/data-profile
+          python -m auxiliary.calendar_experiment --data "$archive" \
+            --selection-manifest results/final/manifest.json --output-dir results/calendar
+
+      - name: Regenerate the second submission and its historical comparisons
+        shell: micromamba-shell {0}
+        run: |
+          archive=data/raw/store-sales-time-series-forecasting.zip
+          python -m auxiliary.competition_ensemble calendar_hgb --data "$archive" --output-dir results/competition-v2
+          python -m auxiliary.competition_ensemble t0_beta --data "$archive" --output-dir results/competition-v2
+          python -m auxiliary.competition_ensemble blend --data "$archive" --output-dir results/competition-v2
+          python -m auxiliary.competition_backtest hgb --data "$archive" --output-dir results/competition-v2-backtest
+          python -m auxiliary.competition_backtest t0 --data "$archive" --output-dir results/competition-v2-backtest
+          python -m auxiliary.competition_backtest evaluate --data "$archive" --output-dir results/competition-v2-backtest
+
       - name: Execute notebook with regenerated results
         shell: micromamba-shell {0}
         env:
           ECON481_RESULTS: results/final
+          ECON481_CALENDAR_RESULTS: results/calendar
         run: python -m pytest --nbmake project.ipynb
 
       - name: Upload aggregate results and manifest
@@ -137,3 +157,10 @@ jobs:
             results/final/scores.csv
             results/final/slices.csv
             results/final/tuning.csv
+            results/data-profile/*.csv
+            results/data-profile/manifest.json
+            results/calendar/*.csv
+            results/calendar/manifest.json
+            results/competition-v2/*.json
+            results/competition-v2-backtest/*.csv
+            results/competition-v2-backtest/historical-blend-evaluation.json

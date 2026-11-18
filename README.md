@@ -4,7 +4,7 @@
 
 A replenishment planner needs 16 days of forecasts before the next ordering cycle. For Ecuadorian grocer Corporación Favorita, we compare seasonal baselines, independently fitted Prophet models, a pooled gradient-boosted tree, and the pretrained t0-beta time-series model. Within the pooled tree, we test the incremental predictive value of a future promotion schedule after accounting for prior promotions.
 
-[Executed project notebook](project.ipynb) · [Kaggle results](#kaggle-results) · [Data exploration](#explore-the-data) · [Reproduce](#reproduce-the-analysis)
+**[Final report (executed notebook)](project.ipynb)** · [Kaggle results](#kaggle-results) · [Data exploration](#explore-the-data) · [Reproduce](#reproduce-the-analysis)
 
 The project's best Kaggle submission scored **0.43811 RMSLE**. A blend of calendar HGB and t0-beta reduced the first submission's error by **7.2%** on the same 28,512 test rows. In the historical study, the value of the promotion schedule was concentrated in promoted observations, and its effect on shortages and excesses varied by window. [Kaggle results and model recipe](#kaggle-results)
 
@@ -175,6 +175,6 @@ python -m auxiliary.competition_backtest evaluate --data "$data" --output-dir "$
 
 ## Earlier experiments
 
-The earlier contiguous June–August 2017 comparison and retrospective pooled extension remain available as a record of the project's development. [Original benchmark](files/official-results/scores.csv) · [Pooled model follow-up](files/global-model-comparison.md) · [Earlier dashboard](files/forecast-dashboard.html) · [Earlier report](files/store-sales-research-report.pdf)
+The archived PDF and dashboard summarize the preliminary June–August 2017 experiments. The final report above includes the expanded evaluation and both Kaggle submissions. [Original benchmark](files/official-results/scores.csv) · [Pooled model follow-up](files/global-model-comparison.md) · [Archived dashboard](files/forecast-dashboard.html) · [Archived preliminary report (PDF)](files/store-sales-research-report.pdf)
 
 The repository follows the [ECON 481A student project template](https://github.com/eisenhauerIO/projects-student-template).

@@ -6,11 +6,11 @@ A replenishment planner needs 16 days of forecasts before the next ordering cycl
 
 **[Final report (executed notebook)](project.ipynb)** · [Kaggle results](#kaggle-results) · [Data exploration](#explore-the-data) · [Reproduce](#reproduce-the-analysis)
 
-The project's best Kaggle submission scored **0.43811 RMSLE**. A blend of calendar HGB and t0-beta reduced the first submission's error by **7.2%** on the same 28,512 test rows. In the historical study, the value of the promotion schedule was concentrated in promoted observations, and its effect on shortages and excesses varied by window. [Kaggle results and model recipe](#kaggle-results)
+The project's best recorded Kaggle submission scored **0.42172 RMSLE**. A blend of calendar HGB, product-family LightGBM, and t0-beta reduced the first submission's error by **10.7%** on the same 28,512 test rows. In the historical study, the value of the promotion schedule was concentrated in promoted observations, and its effect on shortages and excesses varied by window. [Kaggle results and model recipe](#kaggle-results)
 
 ## Findings
 
-The development-selected pooled tree with scheduled promotions had the lowest RMSLE in all three evaluation windows. Its pooled evaluation RMSLE was **0.41636**, about **2.2%** lower than the promotion-aware t0-beta model. t0-beta had the lowest daily MAE and WAPE in each evaluation window. A model can therefore rank first on Kaggle's metric while another produces smaller errors in the units planners order.
+Among the seven configurations in the main promotion study, the development-selected pooled tree with scheduled promotions had the lowest RMSLE in all three evaluation windows. Its pooled evaluation RMSLE was **0.41636**, about **2.2%** lower than the promotion-aware t0-beta model. t0-beta had the lowest daily MAE and WAPE in each evaluation window. A model can therefore rank first on Kaggle's metric while another produces smaller errors in the units planners order.
 
 ![RMSLE for the two leading models across the three evaluation windows, alongside the effect of adding past and scheduled promotions to the pooled tree.](files/forecast-evidence.png)
 
@@ -94,29 +94,30 @@ The combined features improved evaluation RMSLE by **1.8%**, with better results
 | Submitted | Forecast model | Official test RMSLE |
 | --- | --- | ---: |
 | November 16, 2026 | HGB with past and scheduled promotions | 0.47212 |
-| November 17, 2026 | 75% calendar HGB + 25% promotion-aware t0-beta | **0.43811** |
+| November 17, 2026 | 75% calendar HGB + 25% promotion-aware t0-beta | 0.43811 |
+| November 19, 2026 | 50% calendar HGB700 + 25% family LightGBM + 25% t0-beta | **0.42172** |
 
-Both submissions predict August 16–31, 2017. The blend averages `log1p` sales predictions and uses `expm1` to recover sales units. The HGB component adds effective holidays and public-sector paydays to the features used for the first submission. The t0-beta component uses the same pretrained checkpoint and promotion inputs as the main study. [Kaggle submission history](https://www.kaggle.com/competitions/store-sales-time-series-forecasting/submissions) · [Recorded scores and checksums](files/competition-results/manifest.json)
+All three submissions predict August 16–31, 2017. Both ensembles average `log1p` sales predictions and use `expm1` to recover sales units. The HGB component adds effective holidays and public-sector paydays to the features used for the first submission. The t0-beta component uses the same pretrained checkpoint and promotion inputs as the main study. [Kaggle submission history](https://www.kaggle.com/competitions/store-sales-time-series-forecasting/submissions) · [V1 and V2 records](files/competition-results/manifest.json) · [V3 score and checksum](files/refinement-results/submission-manifest.json)
 
-Weights were compared on three May–June windows using pooled RMSLE. The selected recipe scored **0.40462** versus **0.41636** for the first model. With its weights fixed, the blend improved all three later historical windows, reducing pooled RMSLE from **0.39644 to 0.38903**. These dates had already been used in the earlier benchmark, so the later-window comparison is a retrospective check. Kaggle scores both files on a separate period after August 15. [Weight grid](files/competition-results/blend-weight-scores.csv) · [Six historical comparisons](files/competition-results/backtest.csv)
+For V2, weights were compared on three May–June windows using pooled RMSLE. The selected recipe scored **0.40462** versus **0.41636** for the first model. With its weights fixed, the blend improved all three later historical windows, reducing pooled RMSLE from **0.39644 to 0.38903**. These dates had already been used in the earlier benchmark, so the later-window comparison is a retrospective check. Kaggle scores the submissions on the August 16–31 test period. [Weight grid](files/competition-results/blend-weight-scores.csv) · [Six historical comparisons](files/competition-results/backtest.csv)
 
 On those later historical windows, pooled WAPE fell from **13.55% to 12.46%**. That measure sums the absolute sales-unit errors and divides by total recorded sales. An inventory pilot would still need to measure stockouts, waste, and ordering costs. [Forecast errors and sales totals by window](files/competition-results/backtest.csv)
 
-### Next competition candidate
+### Third Kaggle submission
 
-The next candidate combines **50% calendar HGB with 700 boosting iterations, 25% product-family LightGBM, and 25% promotion-aware t0-beta** on the log-sales scale. LightGBM fits a separate model for each of the 33 families. Its features add same-weekday summaries, recent sales and promotion changes, store location and type, and prior-year sales. All sales features stop at the forecast origin. Scheduled promotions cover the 16-day forecast horizon.
+The third submission combines **50% calendar HGB with 700 boosting iterations, 25% product-family LightGBM, and 25% promotion-aware t0-beta** on the log-sales scale. LightGBM fits a separate model for each of the 33 families. Its features add same-weekday summaries, recent sales and promotion changes, store location and type, and prior-year sales. All sales features stop at the forecast origin. Scheduled promotions cover the 16-day forecast horizon.
 
 Four LightGBM configurations were screened on a May–June selection window. The family model contributed the most to the fixed three-model blend, while a global model with a longer, recency-weighted history had the best standalone score. The subsequent weight grid used all three May–June windows and selected the weights above, reducing pooled RMSLE from **0.40462 to 0.40067**. [Initial model screening](files/refinement-results/screening.csv) · [Blend selection](files/refinement-results/selection-grid.csv)
 
 With the recipe fixed, pooled RMSLE on the three later historical windows fell from **0.38903 to 0.38339**, a **1.45%** reduction. Pooled WAPE fell from **12.46% to 11.21%**. Both measures improved in each of the three later windows. These dates had already appeared in the project, so the comparison is retrospective. [Six-window comparison](files/refinement-results/backtest.csv)
 
-| Forecast dates | V2 RMSLE | New candidate RMSLE |
+| Forecast dates | V2 RMSLE | V3 RMSLE |
 | --- | ---: | ---: |
 | June 29–July 14, 2017 | 0.37125 | **0.36700** |
 | July 15–30, 2017 | 0.38914 | **0.38726** |
 | July 31–August 15, 2017 | 0.40593 | **0.39534** |
 
-The candidate is prepared for manual Kaggle submission. Its official Kaggle RMSLE is pending. The earlier scored submission remains **0.43811**. [Candidate status and model recipe](files/refinement-results/manifest.json) · [Prepared CSV checksum](files/refinement-results/submission-manifest.json)
+Kaggle scored V3 at **0.42172 RMSLE** on November 19, 2026, **3.74%** below V2 and **10.68%** below V1. The completed submission and score were recorded from the screenshot supplied by the student. The frozen historical selection archive documents the recipe before submission, and the separate submission record holds the Kaggle result. [Historical model recipe](files/refinement-results/manifest.json) · [Submitted CSV checksum and score evidence](files/refinement-results/submission-manifest.json)
 
 ## Reproduce the analysis
 
@@ -189,7 +190,7 @@ python -m auxiliary.competition_backtest t0 --data "$data" --output-dir "$backte
 python -m auxiliary.competition_backtest evaluate --data "$data" --output-dir "$backtest_dir"
 ```
 
-### Regenerate the next competition candidate
+### Regenerate the third Kaggle submission
 
 Use the historical t0-beta cache and test CSV generated by the preceding competition commands. The refinement was fitted in Python 3.12 with the versions in `requirements-competition.txt`.
 
@@ -233,6 +234,6 @@ The upload file is `results/refinement-submission/submission.csv`. The export ch
 
 ## Earlier experiments
 
-The archived PDF and dashboard summarize the preliminary June–August 2017 experiments. The final report above includes the expanded evaluation and both Kaggle submissions. [Original benchmark](files/official-results/scores.csv) · [Pooled model follow-up](files/global-model-comparison.md) · [Archived dashboard](files/forecast-dashboard.html) · [Archived preliminary report (PDF)](files/store-sales-research-report.pdf)
+The archived PDF and dashboard summarize the preliminary June–August 2017 experiments. The final report above includes the expanded evaluation and three Kaggle submissions. [Original benchmark](files/official-results/scores.csv) · [Pooled model follow-up](files/global-model-comparison.md) · [Archived dashboard](files/forecast-dashboard.html) · [Archived preliminary report (PDF)](files/store-sales-research-report.pdf)
 
 The repository follows the [ECON 481A student project template](https://github.com/eisenhauerIO/projects-student-template).

@@ -1,7 +1,7 @@
 {
   "model": "chronologically_selected_hgb_lightgbm_t0_blend",
-  "kaggle_status": "unsubmitted",
-  "kaggle_rmsle": null,
+  "kaggle_status": "complete",
+  "kaggle_rmsle": 0.42172,
   "selected": {
     "hgb_stage": 700,
     "hgb_weight": 0.5,
@@ -206,5 +206,16 @@
     "pandas": "2.2.3"
   },
   "delivery_filename": "StoreSalesForecasting-HGB-LGBM-T0-v3-submission.csv",
-  "prepared_on": "2026-11-19"
+  "prepared_on": "2026-11-19",
+  "submitted_on": "2026-11-19",
+  "submitted_filename": "StoreSalesForecasting-HGB-LGBM-T0-v3-submission.csv",
+  "score_evidence": {
+    "type": "user_provided_kaggle_submission_screenshot",
+    "filename": "Screenshot 2026-11-19 at 14.31.30.png",
+    "sha256": "4e0f5a2bdcf0485c13751e7599998398230a8a371d49c6be4deda390b3090676",
+    "provided_on": "2026-11-19",
+    "visible_status": "Complete",
+    "visible_kaggle_rmsle": 0.42172,
+    "submissions_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/submissions"
+  }
 }

@@ -1,0 +1,6 @@
+# Recorded Python 3.12 environment for the competition refinement.
+numpy==2.5.5
+pandas==2.2.3
+scipy==1.18.1
+scikit-learn==1.6.1
+lightgbm==4.7.0

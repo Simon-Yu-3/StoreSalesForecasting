@@ -63,7 +63,7 @@ def _read_refinement_cache(panel, path, cutoff, models, *, historical=True):
         if historical and metadata.get("submission", False):
             raise ValueError(f"{path} must contain historical predictions.")
         if any(
-            pd.Timestamp(origin) + pd.Timedelta(days=panel.horizon)
+            pd.Timestamp(origin) + pd.DateOffset(days=panel.horizon)
             > pd.Timestamp(cutoff)
             for origin in metadata.get("training_origins", [])
         ):

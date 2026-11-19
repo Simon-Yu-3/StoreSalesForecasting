@@ -1,0 +1,3361 @@
+{
+  "protocol_version": 1,
+  "data": {
+    "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+    "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+    "synthetic": false,
+    "files": {
+      "train.csv": {
+        "rows": 3000888,
+        "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+      },
+      "test.csv": {
+        "rows": 28512,
+        "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+      },
+      "sample_submission.csv": {
+        "rows": 28512,
+        "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+      }
+    },
+    "missing_training_dates": [
+      "2013-12-25",
+      "2014-12-25",
+      "2015-12-25",
+      "2016-12-25"
+    ]
+  },
+  "periods": {
+    "selection": [
+      "2017-04-30",
+      "2017-05-16",
+      "2017-06-12"
+    ],
+    "later_check": [
+      "2017-06-28",
+      "2017-07-14",
+      "2017-07-30"
+    ]
+  },
+  "selected": {
+    "hgb_stage": 700,
+    "hgb_weight": 0.5,
+    "lgb_weight": 0.25,
+    "t0_weight": 0.25,
+    "selection_rmsle": 0.40067189362064626
+  },
+  "selected_candidate": 16,
+  "later_rmsle": {
+    "v2": 0.3890301989229064,
+    "refinement": 0.383389359632239
+  },
+  "blend_scale": "log1p sales",
+  "baseline": {
+    "calendar_hgb_weight": 0.75,
+    "t0_weight": 0.25
+  },
+  "grid": {
+    "hgb_stages": [
+      400,
+      700
+    ],
+    "lgb_weights": [
+      0,
+      0.25,
+      0.5,
+      0.75,
+      1
+    ],
+    "t0_weights": [
+      0,
+      0.25,
+      0.5
+    ]
+  },
+  "base_model_settings": {
+    "hgb": {
+      "settings": {
+        "loss": "squared_error",
+        "learning_rate": 0.1,
+        "max_iter": 700,
+        "max_leaf_nodes": 43,
+        "min_samples_leaf": 40,
+        "l2_regularization": 1.0,
+        "max_bins": 127,
+        "early_stopping": false,
+        "random_state": 481
+      },
+      "features": [
+        "store",
+        "family",
+        "lead",
+        "weekday",
+        "day_of_month",
+        "month",
+        "month_end",
+        "same_weekday_lag_0",
+        "same_weekday_lag_7",
+        "same_weekday_lag_14",
+        "same_weekday_lag_21",
+        "last_sales",
+        "log_mean_7",
+        "zero_rate_7",
+        "log_mean_28",
+        "zero_rate_28",
+        "log_mean_56",
+        "zero_rate_56",
+        "log_mean_112",
+        "zero_rate_112",
+        "planned_promotion",
+        "promotion_mean_28",
+        "national_holiday",
+        "regional_holiday",
+        "local_holiday",
+        "holiday_bridge",
+        "substitute_workday",
+        "public_sector_payday"
+      ],
+      "calendar_source_files": {
+        "stores.csv": {
+          "rows": 54,
+          "sha256": "af503b2bce11d7906d249f81cc0598f10e2addcc9f6c59aa2d95c9f2652c296b"
+        },
+        "holidays_events.csv": {
+          "rows": 350,
+          "sha256": "81a183d6c4d691b57f84a0fde6bbf734a5b3c36a74b97378bf33a592648e2999"
+        }
+      }
+    },
+    "lgb": {
+      "configuration": "family",
+      "settings": {
+        "objective": "regression",
+        "max_bin": 127,
+        "subsample": 0.85,
+        "subsample_freq": 1,
+        "colsample_bytree": 0.9,
+        "random_state": 481,
+        "deterministic": true,
+        "force_col_wise": true,
+        "histogram_pool_size": 128,
+        "n_jobs": 4,
+        "verbosity": -1,
+        "n_estimators": 500,
+        "learning_rate": 0.04,
+        "num_leaves": 31,
+        "min_child_samples": 40,
+        "reg_lambda": 3.0,
+        "reg_alpha": 0.05
+      },
+      "features": [
+        "store",
+        "family",
+        "lead",
+        "weekday",
+        "day_of_month",
+        "month",
+        "month_end",
+        "same_weekday_lag_0",
+        "same_weekday_lag_7",
+        "same_weekday_lag_14",
+        "same_weekday_lag_21",
+        "last_sales",
+        "log_mean_7",
+        "zero_rate_7",
+        "log_mean_28",
+        "zero_rate_28",
+        "log_mean_56",
+        "zero_rate_56",
+        "log_mean_112",
+        "zero_rate_112",
+        "planned_promotion",
+        "promotion_mean_28",
+        "national_holiday",
+        "regional_holiday",
+        "local_holiday",
+        "holiday_bridge",
+        "substitute_workday",
+        "public_sector_payday",
+        "store_family",
+        "city",
+        "state",
+        "store_type",
+        "cluster",
+        "weekday_log_mean_2",
+        "weekday_log_mean_4",
+        "weekday_log_mean_8",
+        "weekday_log_std_8",
+        "weekday_recent_shift",
+        "target_lag_28",
+        "target_lag_56",
+        "target_lag_364",
+        "origin_sales_lag_1",
+        "origin_sales_lag_2",
+        "origin_sales_lag_3",
+        "origin_sales_lag_6",
+        "origin_sales_lag_13",
+        "origin_sales_lag_27",
+        "raw_log_mean_3",
+        "raw_log_mean_7",
+        "raw_log_mean_14",
+        "raw_log_mean_28",
+        "raw_log_std_28",
+        "weekly_level_shift",
+        "last_three_level_shift",
+        "positive_sales_log_mean_28",
+        "days_since_positive_sale",
+        "promotion_weekday_change",
+        "promotion_level_change",
+        "promotion_log_mean_7",
+        "promotion_weekly_shift",
+        "promotion_horizon_log_mean",
+        "promotion_previous_plan",
+        "promotion_next_plan",
+        "store_log_mean_7",
+        "family_log_mean_7",
+        "store_log_mean_28",
+        "family_log_mean_28",
+        "dayofyear_sin",
+        "dayofyear_cos",
+        "year"
+      ],
+      "calendar_source_files": {
+        "stores.csv": {
+          "rows": 54,
+          "sha256": "af503b2bce11d7906d249f81cc0598f10e2addcc9f6c59aa2d95c9f2652c296b"
+        },
+        "holidays_events.csv": {
+          "rows": 350,
+          "sha256": "81a183d6c4d691b57f84a0fde6bbf734a5b3c36a74b97378bf33a592648e2999"
+        }
+      },
+      "history_days": 560,
+      "origin_step": 8,
+      "half_life_days": 0.0,
+      "grouping": "family",
+      "categorical_features": [
+        "store",
+        "family",
+        "store_family",
+        "city",
+        "state",
+        "store_type",
+        "cluster"
+      ],
+      "training_origin_count": 34
+    }
+  },
+  "cache_provenance": {
+    "2017-04-30": {
+      "hgb": {
+        "sha256": "b646f69ad3cd18c2187535ccd224d0ac47d8c1627c1c944031094d87d3a83847",
+        "metadata": {
+          "model": "calendar_hgb_staged",
+          "configuration": "reference",
+          "settings": {
+            "loss": "squared_error",
+            "learning_rate": 0.1,
+            "max_iter": 700,
+            "max_leaf_nodes": 43,
+            "min_samples_leaf": 40,
+            "l2_regularization": 1.0,
+            "max_bins": 127,
+            "early_stopping": false,
+            "random_state": 481
+          },
+          "stages": [
+            150,
+            400,
+            700
+          ],
+          "data": {
+            "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+            "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+            "synthetic": false,
+            "files": {
+              "train.csv": {
+                "rows": 3000888,
+                "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+              },
+              "test.csv": {
+                "rows": 28512,
+                "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+              },
+              "sample_submission.csv": {
+                "rows": 28512,
+                "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+              }
+            },
+            "missing_training_dates": [
+              "2013-12-25",
+              "2014-12-25",
+              "2015-12-25",
+              "2016-12-25"
+            ]
+          },
+          "calendar_source_files": {
+            "stores.csv": {
+              "rows": 54,
+              "sha256": "af503b2bce11d7906d249f81cc0598f10e2addcc9f6c59aa2d95c9f2652c296b"
+            },
+            "holidays_events.csv": {
+              "rows": 350,
+              "sha256": "81a183d6c4d691b57f84a0fde6bbf734a5b3c36a74b97378bf33a592648e2999"
+            }
+          },
+          "selection_manifest_sha256": "c9bb3fd6237e603ae9ca108701310d44fe9526de10f510cbd5c9c13994797a7c",
+          "cutoff": "2017-04-30",
+          "train_end": "2017-04-30",
+          "forecast_start": "2017-05-01",
+          "forecast_end": "2017-05-16",
+          "horizon": 16,
+          "submission": false,
+          "training_rows": 739530,
+          "features": [
+            "store",
+            "family",
+            "lead",
+            "weekday",
+            "day_of_month",
+            "month",
+            "month_end",
+            "same_weekday_lag_0",
+            "same_weekday_lag_7",
+            "same_weekday_lag_14",
+            "same_weekday_lag_21",
+            "last_sales",
+            "log_mean_7",
+            "zero_rate_7",
+            "log_mean_28",
+            "zero_rate_28",
+            "log_mean_56",
+            "zero_rate_56",
+            "log_mean_112",
+            "zero_rate_112",
+            "planned_promotion",
+            "promotion_mean_28",
+            "national_holiday",
+            "regional_holiday",
+            "local_holiday",
+            "holiday_bridge",
+            "substitute_workday",
+            "public_sector_payday"
+          ],
+          "categorical_features": [
+            "store",
+            "family"
+          ],
+          "feature_seconds": 0.3470179160067346,
+          "fit_seconds": 64.86042425001506,
+          "scores": {
+            "hgb_150": {
+              "n": 28512,
+              "rmsle": 0.4393568868521399,
+              "mae": 80.33930558203662,
+              "wape": 0.16124162327676989,
+              "net_bias_units": -847524.8595582095,
+              "horizon_underforecast_units": 1075682.0628615525,
+              "horizon_overforecast_units": 228157.2033033431
+            },
+            "hgb_400": {
+              "n": 28512,
+              "rmsle": 0.4378162565559546,
+              "mae": 78.02367668024166,
+              "wape": 0.15659413771130457,
+              "net_bias_units": -976498.0736216514,
+              "horizon_underforecast_units": 1162523.7231781785,
+              "horizon_overforecast_units": 186025.6495565269
+            },
+            "hgb_700": {
+              "n": 28512,
+              "rmsle": 0.43749027077843433,
+              "mae": 77.6509132829433,
+              "wape": 0.1558459986174562,
+              "net_bias_units": -1046188.7395174628,
+              "horizon_underforecast_units": 1209640.3595749624,
+              "horizon_overforecast_units": 163451.62005749985
+            }
+          },
+          "runtime": {
+            "python": "3.12.15",
+            "numpy": "2.5.5",
+            "pandas": "2.2.3",
+            "scikit_learn": "1.6.1",
+            "omp_threads": "2"
+          }
+        }
+      },
+      "lgb": {
+        "sha256": "f29bddfc380cafabe4b88ca6cfb86a9495e3c5ff47e923e13f33a64be398259a",
+        "metadata": {
+          "configuration": "family",
+          "grouping": "family",
+          "fitted_groups": [
+            {
+              "family_code": 0,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 1,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 2,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 3,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 4,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 5,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 6,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 7,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 8,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 9,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 10,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 11,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 12,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 13,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 14,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 15,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 16,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 17,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 18,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 19,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 20,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 21,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 22,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 23,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 24,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 25,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 26,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 27,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 28,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 29,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 30,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 31,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 32,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            }
+          ],
+          "settings": {
+            "objective": "regression",
+            "max_bin": 127,
+            "subsample": 0.85,
+            "subsample_freq": 1,
+            "colsample_bytree": 0.9,
+            "random_state": 481,
+            "deterministic": true,
+            "force_col_wise": true,
+            "histogram_pool_size": 128,
+            "n_jobs": 4,
+            "verbosity": -1,
+            "n_estimators": 500,
+            "learning_rate": 0.04,
+            "num_leaves": 31,
+            "min_child_samples": 40,
+            "reg_lambda": 3.0,
+            "reg_alpha": 0.05
+          },
+          "data": {
+            "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+            "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+            "synthetic": false,
+            "files": {
+              "train.csv": {
+                "rows": 3000888,
+                "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+              },
+              "test.csv": {
+                "rows": 28512,
+                "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+              },
+              "sample_submission.csv": {
+                "rows": 28512,
+                "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+              }
+            },
+            "missing_training_dates": [
+              "2013-12-25",
+              "2014-12-25",
+              "2015-12-25",
+              "2016-12-25"
+            ]
+          },
+          "calendar_source_files": {
+            "stores.csv": {
+              "rows": 54,
+              "sha256": "af503b2bce11d7906d249f81cc0598f10e2addcc9f6c59aa2d95c9f2652c296b"
+            },
+            "holidays_events.csv": {
+              "rows": 350,
+              "sha256": "81a183d6c4d691b57f84a0fde6bbf734a5b3c36a74b97378bf33a592648e2999"
+            }
+          },
+          "cutoff": "2017-04-30",
+          "forecast_start": "2017-05-01",
+          "forecast_end": "2017-05-16",
+          "origin_step": 8,
+          "history_days": 560,
+          "feature_max_calendar_lookback": 371,
+          "training_origins": [
+            "2016-07-24",
+            "2016-08-01",
+            "2016-08-09",
+            "2016-08-17",
+            "2016-08-25",
+            "2016-09-02",
+            "2016-09-10",
+            "2016-09-18",
+            "2016-09-26",
+            "2016-10-04",
+            "2016-10-12",
+            "2016-10-20",
+            "2016-10-28",
+            "2016-11-05",
+            "2016-11-13",
+            "2016-11-21",
+            "2016-11-29",
+            "2016-12-07",
+            "2016-12-15",
+            "2016-12-23",
+            "2016-12-31",
+            "2017-01-08",
+            "2017-01-16",
+            "2017-01-24",
+            "2017-02-01",
+            "2017-02-09",
+            "2017-02-17",
+            "2017-02-25",
+            "2017-03-05",
+            "2017-03-13",
+            "2017-03-21",
+            "2017-03-29",
+            "2017-04-06",
+            "2017-04-14"
+          ],
+          "training_rows": 965844,
+          "features": [
+            "store",
+            "family",
+            "lead",
+            "weekday",
+            "day_of_month",
+            "month",
+            "month_end",
+            "same_weekday_lag_0",
+            "same_weekday_lag_7",
+            "same_weekday_lag_14",
+            "same_weekday_lag_21",
+            "last_sales",
+            "log_mean_7",
+            "zero_rate_7",
+            "log_mean_28",
+            "zero_rate_28",
+            "log_mean_56",
+            "zero_rate_56",
+            "log_mean_112",
+            "zero_rate_112",
+            "planned_promotion",
+            "promotion_mean_28",
+            "national_holiday",
+            "regional_holiday",
+            "local_holiday",
+            "holiday_bridge",
+            "substitute_workday",
+            "public_sector_payday",
+            "store_family",
+            "city",
+            "state",
+            "store_type",
+            "cluster",
+            "weekday_log_mean_2",
+            "weekday_log_mean_4",
+            "weekday_log_mean_8",
+            "weekday_log_std_8",
+            "weekday_recent_shift",
+            "target_lag_28",
+            "target_lag_56",
+            "target_lag_364",
+            "origin_sales_lag_1",
+            "origin_sales_lag_2",
+            "origin_sales_lag_3",
+            "origin_sales_lag_6",
+            "origin_sales_lag_13",
+            "origin_sales_lag_27",
+            "raw_log_mean_3",
+            "raw_log_mean_7",
+            "raw_log_mean_14",
+            "raw_log_mean_28",
+            "raw_log_std_28",
+            "weekly_level_shift",
+            "last_three_level_shift",
+            "positive_sales_log_mean_28",
+            "days_since_positive_sale",
+            "promotion_weekday_change",
+            "promotion_level_change",
+            "promotion_log_mean_7",
+            "promotion_weekly_shift",
+            "promotion_horizon_log_mean",
+            "promotion_previous_plan",
+            "promotion_next_plan",
+            "store_log_mean_7",
+            "family_log_mean_7",
+            "store_log_mean_28",
+            "family_log_mean_28",
+            "dayofyear_sin",
+            "dayofyear_cos",
+            "year"
+          ],
+          "categorical_features": [
+            "store",
+            "family",
+            "store_family",
+            "city",
+            "state",
+            "store_type",
+            "cluster"
+          ],
+          "half_life_days": 0.0,
+          "feature_seconds": 0.6989032910205424,
+          "model_seconds": 80.2314736660046,
+          "runtime": {
+            "python": "3.12.15",
+            "lightgbm": "4.7.0",
+            "numpy": "2.5.5",
+            "pandas": "2.2.3"
+          },
+          "scores": {
+            "n": 28512,
+            "rmsle": 0.44390171652024235,
+            "mae": 77.13307502860104,
+            "wape": 0.15480669313528853,
+            "net_bias_units": -640208.4481379924,
+            "horizon_underforecast_units": 862174.1565998989,
+            "horizon_overforecast_units": 221965.7084619066
+          }
+        }
+      }
+    },
+    "2017-05-16": {
+      "hgb": {
+        "sha256": "cd5bdc3c4aeef8e9624e0c297ea8869fc18805b8de904fa85b2d745a253b7a71",
+        "metadata": {
+          "model": "calendar_hgb_staged",
+          "configuration": "reference",
+          "settings": {
+            "loss": "squared_error",
+            "learning_rate": 0.1,
+            "max_iter": 700,
+            "max_leaf_nodes": 43,
+            "min_samples_leaf": 40,
+            "l2_regularization": 1.0,
+            "max_bins": 127,
+            "early_stopping": false,
+            "random_state": 481
+          },
+          "stages": [
+            150,
+            400,
+            700
+          ],
+          "data": {
+            "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+            "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+            "synthetic": false,
+            "files": {
+              "train.csv": {
+                "rows": 3000888,
+                "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+              },
+              "test.csv": {
+                "rows": 28512,
+                "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+              },
+              "sample_submission.csv": {
+                "rows": 28512,
+                "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+              }
+            },
+            "missing_training_dates": [
+              "2013-12-25",
+              "2014-12-25",
+              "2015-12-25",
+              "2016-12-25"
+            ]
+          },
+          "calendar_source_files": {
+            "stores.csv": {
+              "rows": 54,
+              "sha256": "af503b2bce11d7906d249f81cc0598f10e2addcc9f6c59aa2d95c9f2652c296b"
+            },
+            "holidays_events.csv": {
+              "rows": 350,
+              "sha256": "81a183d6c4d691b57f84a0fde6bbf734a5b3c36a74b97378bf33a592648e2999"
+            }
+          },
+          "selection_manifest_sha256": "c9bb3fd6237e603ae9ca108701310d44fe9526de10f510cbd5c9c13994797a7c",
+          "cutoff": "2017-05-16",
+          "train_end": "2017-05-16",
+          "forecast_start": "2017-05-17",
+          "forecast_end": "2017-06-01",
+          "horizon": 16,
+          "submission": false,
+          "training_rows": 739530,
+          "features": [
+            "store",
+            "family",
+            "lead",
+            "weekday",
+            "day_of_month",
+            "month",
+            "month_end",
+            "same_weekday_lag_0",
+            "same_weekday_lag_7",
+            "same_weekday_lag_14",
+            "same_weekday_lag_21",
+            "last_sales",
+            "log_mean_7",
+            "zero_rate_7",
+            "log_mean_28",
+            "zero_rate_28",
+            "log_mean_56",
+            "zero_rate_56",
+            "log_mean_112",
+            "zero_rate_112",
+            "planned_promotion",
+            "promotion_mean_28",
+            "national_holiday",
+            "regional_holiday",
+            "local_holiday",
+            "holiday_bridge",
+            "substitute_workday",
+            "public_sector_payday"
+          ],
+          "categorical_features": [
+            "store",
+            "family"
+          ],
+          "feature_seconds": 0.18008104199543595,
+          "fit_seconds": 56.359756374993594,
+          "scores": {
+            "hgb_150": {
+              "n": 28512,
+              "rmsle": 0.4013355760922368,
+              "mae": 64.44730763785854,
+              "wape": 0.13639070306546489,
+              "net_bias_units": -505194.32086160453,
+              "horizon_underforecast_units": 681418.5545510731,
+              "horizon_overforecast_units": 176224.23368946862
+            },
+            "hgb_400": {
+              "n": 28512,
+              "rmsle": 0.39769307622901956,
+              "mae": 61.6973306957436,
+              "wape": 0.13057088991428611,
+              "net_bias_units": -619410.3132607925,
+              "horizon_underforecast_units": 743849.4717989822,
+              "horizon_overforecast_units": 124439.15853818982
+            },
+            "hgb_700": {
+              "n": 28512,
+              "rmsle": 0.39745236118132016,
+              "mae": 61.246629516599626,
+              "wape": 0.12961706495326056,
+              "net_bias_units": -678238.802562895,
+              "horizon_underforecast_units": 783674.6928256869,
+              "horizon_overforecast_units": 105435.89026279174
+            }
+          },
+          "runtime": {
+            "python": "3.12.15",
+            "numpy": "2.5.5",
+            "pandas": "2.2.3",
+            "scikit_learn": "1.6.1",
+            "omp_threads": "2"
+          }
+        }
+      },
+      "lgb": {
+        "sha256": "755465b6c49d0fee01468b9e859ed6ab44224d4b301147454e714dd1cdde5674",
+        "metadata": {
+          "configuration": "family",
+          "grouping": "family",
+          "fitted_groups": [
+            {
+              "family_code": 0,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 1,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 2,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 3,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 4,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 5,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 6,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 7,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 8,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 9,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 10,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 11,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 12,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 13,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 14,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 15,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 16,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 17,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 18,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 19,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 20,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 21,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 22,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 23,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 24,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 25,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 26,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 27,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 28,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 29,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 30,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 31,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 32,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            }
+          ],
+          "settings": {
+            "objective": "regression",
+            "max_bin": 127,
+            "subsample": 0.85,
+            "subsample_freq": 1,
+            "colsample_bytree": 0.9,
+            "random_state": 481,
+            "deterministic": true,
+            "force_col_wise": true,
+            "histogram_pool_size": 128,
+            "n_jobs": 4,
+            "verbosity": -1,
+            "n_estimators": 500,
+            "learning_rate": 0.04,
+            "num_leaves": 31,
+            "min_child_samples": 40,
+            "reg_lambda": 3.0,
+            "reg_alpha": 0.05
+          },
+          "data": {
+            "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+            "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+            "synthetic": false,
+            "files": {
+              "train.csv": {
+                "rows": 3000888,
+                "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+              },
+              "test.csv": {
+                "rows": 28512,
+                "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+              },
+              "sample_submission.csv": {
+                "rows": 28512,
+                "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+              }
+            },
+            "missing_training_dates": [
+              "2013-12-25",
+              "2014-12-25",
+              "2015-12-25",
+              "2016-12-25"
+            ]
+          },
+          "calendar_source_files": {
+            "stores.csv": {
+              "rows": 54,
+              "sha256": "af503b2bce11d7906d249f81cc0598f10e2addcc9f6c59aa2d95c9f2652c296b"
+            },
+            "holidays_events.csv": {
+              "rows": 350,
+              "sha256": "81a183d6c4d691b57f84a0fde6bbf734a5b3c36a74b97378bf33a592648e2999"
+            }
+          },
+          "cutoff": "2017-05-16",
+          "forecast_start": "2017-05-17",
+          "forecast_end": "2017-06-01",
+          "origin_step": 8,
+          "history_days": 560,
+          "feature_max_calendar_lookback": 371,
+          "training_origins": [
+            "2016-08-09",
+            "2016-08-17",
+            "2016-08-25",
+            "2016-09-02",
+            "2016-09-10",
+            "2016-09-18",
+            "2016-09-26",
+            "2016-10-04",
+            "2016-10-12",
+            "2016-10-20",
+            "2016-10-28",
+            "2016-11-05",
+            "2016-11-13",
+            "2016-11-21",
+            "2016-11-29",
+            "2016-12-07",
+            "2016-12-15",
+            "2016-12-23",
+            "2016-12-31",
+            "2017-01-08",
+            "2017-01-16",
+            "2017-01-24",
+            "2017-02-01",
+            "2017-02-09",
+            "2017-02-17",
+            "2017-02-25",
+            "2017-03-05",
+            "2017-03-13",
+            "2017-03-21",
+            "2017-03-29",
+            "2017-04-06",
+            "2017-04-14",
+            "2017-04-22",
+            "2017-04-30"
+          ],
+          "training_rows": 965844,
+          "features": [
+            "store",
+            "family",
+            "lead",
+            "weekday",
+            "day_of_month",
+            "month",
+            "month_end",
+            "same_weekday_lag_0",
+            "same_weekday_lag_7",
+            "same_weekday_lag_14",
+            "same_weekday_lag_21",
+            "last_sales",
+            "log_mean_7",
+            "zero_rate_7",
+            "log_mean_28",
+            "zero_rate_28",
+            "log_mean_56",
+            "zero_rate_56",
+            "log_mean_112",
+            "zero_rate_112",
+            "planned_promotion",
+            "promotion_mean_28",
+            "national_holiday",
+            "regional_holiday",
+            "local_holiday",
+            "holiday_bridge",
+            "substitute_workday",
+            "public_sector_payday",
+            "store_family",
+            "city",
+            "state",
+            "store_type",
+            "cluster",
+            "weekday_log_mean_2",
+            "weekday_log_mean_4",
+            "weekday_log_mean_8",
+            "weekday_log_std_8",
+            "weekday_recent_shift",
+            "target_lag_28",
+            "target_lag_56",
+            "target_lag_364",
+            "origin_sales_lag_1",
+            "origin_sales_lag_2",
+            "origin_sales_lag_3",
+            "origin_sales_lag_6",
+            "origin_sales_lag_13",
+            "origin_sales_lag_27",
+            "raw_log_mean_3",
+            "raw_log_mean_7",
+            "raw_log_mean_14",
+            "raw_log_mean_28",
+            "raw_log_std_28",
+            "weekly_level_shift",
+            "last_three_level_shift",
+            "positive_sales_log_mean_28",
+            "days_since_positive_sale",
+            "promotion_weekday_change",
+            "promotion_level_change",
+            "promotion_log_mean_7",
+            "promotion_weekly_shift",
+            "promotion_horizon_log_mean",
+            "promotion_previous_plan",
+            "promotion_next_plan",
+            "store_log_mean_7",
+            "family_log_mean_7",
+            "store_log_mean_28",
+            "family_log_mean_28",
+            "dayofyear_sin",
+            "dayofyear_cos",
+            "year"
+          ],
+          "categorical_features": [
+            "store",
+            "family",
+            "store_family",
+            "city",
+            "state",
+            "store_type",
+            "cluster"
+          ],
+          "half_life_days": 0.0,
+          "feature_seconds": 0.6886338339827489,
+          "model_seconds": 85.1098784589849,
+          "runtime": {
+            "python": "3.12.15",
+            "lightgbm": "4.7.0",
+            "numpy": "2.5.5",
+            "pandas": "2.2.3"
+          },
+          "scores": {
+            "n": 28512,
+            "rmsle": 0.41152753189059316,
+            "mae": 72.88416731421451,
+            "wape": 0.15424574255584844,
+            "net_bias_units": -1427280.1961273907,
+            "horizon_underforecast_units": 1476886.5683555158,
+            "horizon_overforecast_units": 49606.37222812522
+          }
+        }
+      }
+    },
+    "2017-06-12": {
+      "hgb": {
+        "sha256": "18c6875d83116e1b67b3db550b78b8dc37008f6d71b05340e039452f7f2c0d7c",
+        "metadata": {
+          "model": "calendar_hgb_staged",
+          "configuration": "reference",
+          "settings": {
+            "loss": "squared_error",
+            "learning_rate": 0.1,
+            "max_iter": 700,
+            "max_leaf_nodes": 43,
+            "min_samples_leaf": 40,
+            "l2_regularization": 1.0,
+            "max_bins": 127,
+            "early_stopping": false,
+            "random_state": 481
+          },
+          "stages": [
+            150,
+            400,
+            700
+          ],
+          "data": {
+            "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+            "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+            "synthetic": false,
+            "files": {
+              "train.csv": {
+                "rows": 3000888,
+                "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+              },
+              "test.csv": {
+                "rows": 28512,
+                "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+              },
+              "sample_submission.csv": {
+                "rows": 28512,
+                "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+              }
+            },
+            "missing_training_dates": [
+              "2013-12-25",
+              "2014-12-25",
+              "2015-12-25",
+              "2016-12-25"
+            ]
+          },
+          "calendar_source_files": {
+            "stores.csv": {
+              "rows": 54,
+              "sha256": "af503b2bce11d7906d249f81cc0598f10e2addcc9f6c59aa2d95c9f2652c296b"
+            },
+            "holidays_events.csv": {
+              "rows": 350,
+              "sha256": "81a183d6c4d691b57f84a0fde6bbf734a5b3c36a74b97378bf33a592648e2999"
+            }
+          },
+          "selection_manifest_sha256": "c9bb3fd6237e603ae9ca108701310d44fe9526de10f510cbd5c9c13994797a7c",
+          "cutoff": "2017-06-12",
+          "train_end": "2017-06-12",
+          "forecast_start": "2017-06-13",
+          "forecast_end": "2017-06-28",
+          "horizon": 16,
+          "submission": false,
+          "training_rows": 739530,
+          "features": [
+            "store",
+            "family",
+            "lead",
+            "weekday",
+            "day_of_month",
+            "month",
+            "month_end",
+            "same_weekday_lag_0",
+            "same_weekday_lag_7",
+            "same_weekday_lag_14",
+            "same_weekday_lag_21",
+            "last_sales",
+            "log_mean_7",
+            "zero_rate_7",
+            "log_mean_28",
+            "zero_rate_28",
+            "log_mean_56",
+            "zero_rate_56",
+            "log_mean_112",
+            "zero_rate_112",
+            "planned_promotion",
+            "promotion_mean_28",
+            "national_holiday",
+            "regional_holiday",
+            "local_holiday",
+            "holiday_bridge",
+            "substitute_workday",
+            "public_sector_payday"
+          ],
+          "categorical_features": [
+            "store",
+            "family"
+          ],
+          "feature_seconds": null,
+          "fit_seconds": 44.694239139556885,
+          "scores": {
+            "hgb_150": {
+              "n": 28512,
+              "rmsle": 0.38388502945176645,
+              "mae": 58.3163258827986,
+              "wape": 0.12777717318706808,
+              "net_bias_units": 25714.729289752795,
+              "horizon_underforecast_units": 368940.58690898045,
+              "horizon_overforecast_units": 394655.3161987332
+            },
+            "hgb_400": {
+              "n": 28512,
+              "rmsle": 0.38100379174003374,
+              "mae": 56.22031279972004,
+              "wape": 0.12318458916081877,
+              "net_bias_units": -81550.39951487136,
+              "horizon_underforecast_units": 388985.08601676486,
+              "horizon_overforecast_units": 307434.68650189345
+            },
+            "hgb_700": {
+              "n": 28512,
+              "rmsle": 0.3809864929199792,
+              "mae": 55.6690170828215,
+              "wape": 0.12197664254845833,
+              "net_bias_units": -118486.42606909132,
+              "horizon_underforecast_units": 413144.8318240022,
+              "horizon_overforecast_units": 294658.40575491084
+            }
+          },
+          "runtime": {
+            "python": "3.12.15",
+            "numpy": "2.5.5",
+            "pandas": "2.2.3",
+            "scipy": "1.18.1",
+            "scikit_learn": "1.6.1",
+            "omp_threads": null
+          },
+          "cache_origin": {
+            "method": "Reused existing staged predictions from the completed 700-iteration calendar HGB fit without refitting.",
+            "script": {
+              "path": "../try_hgb_deeper.py",
+              "sha256": "d6478432ac0a8e2b2a4d2d6f8842a4ed18728e5de43f6ea5a7c4b531107aab1b"
+            },
+            "predictions": {
+              "hgb_150": {
+                "path": "results/deeper-hgb/2017-06-12-150.npy",
+                "sha256": "4ccfd9657f403d1ff9d8c9b6dfad75f3c4ba2863e64d1df7b7ab0e609866e198"
+              },
+              "hgb_400": {
+                "path": "results/deeper-hgb/2017-06-12-400.npy",
+                "sha256": "d9af8af2bfbbfb4824665d7632e497f1bde097f7d8cf6605f2d16b8b65e8e4b9"
+              },
+              "hgb_700": {
+                "path": "results/deeper-hgb/2017-06-12-700.npy",
+                "sha256": "49547460102bcddb8584bf8c135719c42680de37c52c222c64f9a2baed56011c"
+              }
+            },
+            "score_record": {
+              "path": "results/deeper-hgb/scores.json",
+              "sha256": "04ff7921e247dc7d721b10ebdea1e5481f9e869b439f95476e6b2e71a31fa83b"
+            },
+            "fit_seconds_source": "Observed model.fit wall-clock duration supplied by the coordinating agent.",
+            "feature_seconds_source": "The original feature timing and thread count were not retained."
+          }
+        }
+      },
+      "lgb": {
+        "sha256": "fb8c285d8e0cd9ca69aea9f6096d9242d2470b639e6fad780998a354cdd9442c",
+        "metadata": {
+          "configuration": "family",
+          "grouping": "family",
+          "fitted_groups": [
+            {
+              "family_code": 0,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 1,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 2,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 3,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 4,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 5,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 6,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 7,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 8,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 9,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 10,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 11,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 12,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 13,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 14,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 15,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 16,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 17,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 18,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 19,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 20,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 21,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 22,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 23,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 24,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 25,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 26,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 27,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 28,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 29,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 30,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 31,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 32,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            }
+          ],
+          "settings": {
+            "objective": "regression",
+            "max_bin": 127,
+            "subsample": 0.85,
+            "subsample_freq": 1,
+            "colsample_bytree": 0.9,
+            "random_state": 481,
+            "deterministic": true,
+            "force_col_wise": true,
+            "histogram_pool_size": 128,
+            "n_jobs": 4,
+            "verbosity": -1,
+            "n_estimators": 500,
+            "learning_rate": 0.04,
+            "num_leaves": 31,
+            "min_child_samples": 40,
+            "reg_lambda": 3.0,
+            "reg_alpha": 0.05
+          },
+          "data": {
+            "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+            "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+            "synthetic": false,
+            "files": {
+              "train.csv": {
+                "rows": 3000888,
+                "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+              },
+              "test.csv": {
+                "rows": 28512,
+                "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+              },
+              "sample_submission.csv": {
+                "rows": 28512,
+                "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+              }
+            },
+            "missing_training_dates": [
+              "2013-12-25",
+              "2014-12-25",
+              "2015-12-25",
+              "2016-12-25"
+            ]
+          },
+          "calendar_source_files": {
+            "stores.csv": {
+              "rows": 54,
+              "sha256": "af503b2bce11d7906d249f81cc0598f10e2addcc9f6c59aa2d95c9f2652c296b"
+            },
+            "holidays_events.csv": {
+              "rows": 350,
+              "sha256": "81a183d6c4d691b57f84a0fde6bbf734a5b3c36a74b97378bf33a592648e2999"
+            }
+          },
+          "cutoff": "2017-06-12",
+          "forecast_start": "2017-06-13",
+          "forecast_end": "2017-06-28",
+          "origin_step": 8,
+          "history_days": 560,
+          "feature_max_calendar_lookback": 371,
+          "training_origins": [
+            "2016-09-05",
+            "2016-09-13",
+            "2016-09-21",
+            "2016-09-29",
+            "2016-10-07",
+            "2016-10-15",
+            "2016-10-23",
+            "2016-10-31",
+            "2016-11-08",
+            "2016-11-16",
+            "2016-11-24",
+            "2016-12-02",
+            "2016-12-10",
+            "2016-12-18",
+            "2016-12-26",
+            "2017-01-03",
+            "2017-01-11",
+            "2017-01-19",
+            "2017-01-27",
+            "2017-02-04",
+            "2017-02-12",
+            "2017-02-20",
+            "2017-02-28",
+            "2017-03-08",
+            "2017-03-16",
+            "2017-03-24",
+            "2017-04-01",
+            "2017-04-09",
+            "2017-04-17",
+            "2017-04-25",
+            "2017-05-03",
+            "2017-05-11",
+            "2017-05-19",
+            "2017-05-27"
+          ],
+          "training_rows": 965844,
+          "features": [
+            "store",
+            "family",
+            "lead",
+            "weekday",
+            "day_of_month",
+            "month",
+            "month_end",
+            "same_weekday_lag_0",
+            "same_weekday_lag_7",
+            "same_weekday_lag_14",
+            "same_weekday_lag_21",
+            "last_sales",
+            "log_mean_7",
+            "zero_rate_7",
+            "log_mean_28",
+            "zero_rate_28",
+            "log_mean_56",
+            "zero_rate_56",
+            "log_mean_112",
+            "zero_rate_112",
+            "planned_promotion",
+            "promotion_mean_28",
+            "national_holiday",
+            "regional_holiday",
+            "local_holiday",
+            "holiday_bridge",
+            "substitute_workday",
+            "public_sector_payday",
+            "store_family",
+            "city",
+            "state",
+            "store_type",
+            "cluster",
+            "weekday_log_mean_2",
+            "weekday_log_mean_4",
+            "weekday_log_mean_8",
+            "weekday_log_std_8",
+            "weekday_recent_shift",
+            "target_lag_28",
+            "target_lag_56",
+            "target_lag_364",
+            "origin_sales_lag_1",
+            "origin_sales_lag_2",
+            "origin_sales_lag_3",
+            "origin_sales_lag_6",
+            "origin_sales_lag_13",
+            "origin_sales_lag_27",
+            "raw_log_mean_3",
+            "raw_log_mean_7",
+            "raw_log_mean_14",
+            "raw_log_mean_28",
+            "raw_log_std_28",
+            "weekly_level_shift",
+            "last_three_level_shift",
+            "positive_sales_log_mean_28",
+            "days_since_positive_sale",
+            "promotion_weekday_change",
+            "promotion_level_change",
+            "promotion_log_mean_7",
+            "promotion_weekly_shift",
+            "promotion_horizon_log_mean",
+            "promotion_previous_plan",
+            "promotion_next_plan",
+            "store_log_mean_7",
+            "family_log_mean_7",
+            "store_log_mean_28",
+            "family_log_mean_28",
+            "dayofyear_sin",
+            "dayofyear_cos",
+            "year"
+          ],
+          "categorical_features": [
+            "store",
+            "family",
+            "store_family",
+            "city",
+            "state",
+            "store_type",
+            "cluster"
+          ],
+          "half_life_days": 0,
+          "feature_seconds": 0.7771418330084998,
+          "model_seconds": 114.76689716699184,
+          "runtime": {
+            "python": "3.12.15",
+            "lightgbm": "4.7.0",
+            "numpy": "2.5.5",
+            "pandas": "2.2.3"
+          },
+          "scores": {
+            "n": 28512,
+            "rmsle": 0.38418800851631274,
+            "mae": 56.226268868504796,
+            "wape": 0.12319763953086699,
+            "net_bias_units": 436283.3939986505,
+            "horizon_underforecast_units": 194643.77522888605,
+            "horizon_overforecast_units": 630927.1692275365
+          }
+        }
+      }
+    },
+    "2017-06-28": {
+      "hgb": {
+        "sha256": "f786026359054fb46df4d56bff7b49e23f316265c264799f66bb956e15b06981",
+        "metadata": {
+          "model": "calendar_hgb_staged",
+          "configuration": "reference",
+          "settings": {
+            "loss": "squared_error",
+            "learning_rate": 0.1,
+            "max_iter": 700,
+            "max_leaf_nodes": 43,
+            "min_samples_leaf": 40,
+            "l2_regularization": 1.0,
+            "max_bins": 127,
+            "early_stopping": false,
+            "random_state": 481
+          },
+          "stages": [
+            150,
+            400,
+            700
+          ],
+          "data": {
+            "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+            "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+            "synthetic": false,
+            "files": {
+              "train.csv": {
+                "rows": 3000888,
+                "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+              },
+              "test.csv": {
+                "rows": 28512,
+                "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+              },
+              "sample_submission.csv": {
+                "rows": 28512,
+                "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+              }
+            },
+            "missing_training_dates": [
+              "2013-12-25",
+              "2014-12-25",
+              "2015-12-25",
+              "2016-12-25"
+            ]
+          },
+          "calendar_source_files": {
+            "stores.csv": {
+              "rows": 54,
+              "sha256": "af503b2bce11d7906d249f81cc0598f10e2addcc9f6c59aa2d95c9f2652c296b"
+            },
+            "holidays_events.csv": {
+              "rows": 350,
+              "sha256": "81a183d6c4d691b57f84a0fde6bbf734a5b3c36a74b97378bf33a592648e2999"
+            }
+          },
+          "selection_manifest_sha256": "c9bb3fd6237e603ae9ca108701310d44fe9526de10f510cbd5c9c13994797a7c",
+          "cutoff": "2017-06-28",
+          "train_end": "2017-06-28",
+          "forecast_start": "2017-06-29",
+          "forecast_end": "2017-07-14",
+          "horizon": 16,
+          "submission": false,
+          "training_rows": 739530,
+          "features": [
+            "store",
+            "family",
+            "lead",
+            "weekday",
+            "day_of_month",
+            "month",
+            "month_end",
+            "same_weekday_lag_0",
+            "same_weekday_lag_7",
+            "same_weekday_lag_14",
+            "same_weekday_lag_21",
+            "last_sales",
+            "log_mean_7",
+            "zero_rate_7",
+            "log_mean_28",
+            "zero_rate_28",
+            "log_mean_56",
+            "zero_rate_56",
+            "log_mean_112",
+            "zero_rate_112",
+            "planned_promotion",
+            "promotion_mean_28",
+            "national_holiday",
+            "regional_holiday",
+            "local_holiday",
+            "holiday_bridge",
+            "substitute_workday",
+            "public_sector_payday"
+          ],
+          "categorical_features": [
+            "store",
+            "family"
+          ],
+          "feature_seconds": 0.18392483299248852,
+          "fit_seconds": 56.97310687499703,
+          "scores": {
+            "hgb_150": {
+              "n": 28512,
+              "rmsle": 0.374708042229806,
+              "mae": 55.86295591918458,
+              "wape": 0.11522836744669225,
+              "net_bias_units": -13039.541705726428,
+              "horizon_underforecast_units": 404540.97437525686,
+              "horizon_overforecast_units": 391501.43266953045
+            },
+            "hgb_400": {
+              "n": 28512,
+              "rmsle": 0.37288730749185117,
+              "mae": 53.695414114823,
+              "wape": 0.1107573848540352,
+              "net_bias_units": -13436.679266050618,
+              "horizon_underforecast_units": 383324.4342157582,
+              "horizon_overforecast_units": 369887.75494970765
+            },
+            "hgb_700": {
+              "n": 28512,
+              "rmsle": 0.37220573886546204,
+              "mae": 52.9369346324025,
+              "wape": 0.10919287128573131,
+              "net_bias_units": -15699.179957779983,
+              "horizon_underforecast_units": 381394.51396730216,
+              "horizon_overforecast_units": 365695.3340095222
+            }
+          },
+          "runtime": {
+            "python": "3.12.15",
+            "numpy": "2.5.5",
+            "pandas": "2.2.3",
+            "scikit_learn": "1.6.1",
+            "omp_threads": "2"
+          }
+        }
+      },
+      "lgb": {
+        "sha256": "4a8425ca54120d23e9ad1ef150584f7707e12e4509cd307f2689bfa030233f5f",
+        "metadata": {
+          "configuration": "family",
+          "grouping": "family",
+          "fitted_groups": [
+            {
+              "family_code": 0,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 1,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 2,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 3,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 4,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 5,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 6,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 7,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 8,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 9,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 10,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 11,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 12,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 13,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 14,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 15,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 16,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 17,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 18,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 19,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 20,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 21,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 22,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 23,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 24,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 25,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 26,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 27,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 28,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 29,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 30,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 31,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 32,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            }
+          ],
+          "settings": {
+            "objective": "regression",
+            "max_bin": 127,
+            "subsample": 0.85,
+            "subsample_freq": 1,
+            "colsample_bytree": 0.9,
+            "random_state": 481,
+            "deterministic": true,
+            "force_col_wise": true,
+            "histogram_pool_size": 128,
+            "n_jobs": 4,
+            "verbosity": -1,
+            "n_estimators": 500,
+            "learning_rate": 0.04,
+            "num_leaves": 31,
+            "min_child_samples": 40,
+            "reg_lambda": 3.0,
+            "reg_alpha": 0.05
+          },
+          "data": {
+            "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+            "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+            "synthetic": false,
+            "files": {
+              "train.csv": {
+                "rows": 3000888,
+                "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+              },
+              "test.csv": {
+                "rows": 28512,
+                "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+              },
+              "sample_submission.csv": {
+                "rows": 28512,
+                "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+              }
+            },
+            "missing_training_dates": [
+              "2013-12-25",
+              "2014-12-25",
+              "2015-12-25",
+              "2016-12-25"
+            ]
+          },
+          "calendar_source_files": {
+            "stores.csv": {
+              "rows": 54,
+              "sha256": "af503b2bce11d7906d249f81cc0598f10e2addcc9f6c59aa2d95c9f2652c296b"
+            },
+            "holidays_events.csv": {
+              "rows": 350,
+              "sha256": "81a183d6c4d691b57f84a0fde6bbf734a5b3c36a74b97378bf33a592648e2999"
+            }
+          },
+          "cutoff": "2017-06-28",
+          "forecast_start": "2017-06-29",
+          "forecast_end": "2017-07-14",
+          "origin_step": 8,
+          "history_days": 560,
+          "feature_max_calendar_lookback": 371,
+          "training_origins": [
+            "2016-09-21",
+            "2016-09-29",
+            "2016-10-07",
+            "2016-10-15",
+            "2016-10-23",
+            "2016-10-31",
+            "2016-11-08",
+            "2016-11-16",
+            "2016-11-24",
+            "2016-12-02",
+            "2016-12-10",
+            "2016-12-18",
+            "2016-12-26",
+            "2017-01-03",
+            "2017-01-11",
+            "2017-01-19",
+            "2017-01-27",
+            "2017-02-04",
+            "2017-02-12",
+            "2017-02-20",
+            "2017-02-28",
+            "2017-03-08",
+            "2017-03-16",
+            "2017-03-24",
+            "2017-04-01",
+            "2017-04-09",
+            "2017-04-17",
+            "2017-04-25",
+            "2017-05-03",
+            "2017-05-11",
+            "2017-05-19",
+            "2017-05-27",
+            "2017-06-04",
+            "2017-06-12"
+          ],
+          "training_rows": 965844,
+          "features": [
+            "store",
+            "family",
+            "lead",
+            "weekday",
+            "day_of_month",
+            "month",
+            "month_end",
+            "same_weekday_lag_0",
+            "same_weekday_lag_7",
+            "same_weekday_lag_14",
+            "same_weekday_lag_21",
+            "last_sales",
+            "log_mean_7",
+            "zero_rate_7",
+            "log_mean_28",
+            "zero_rate_28",
+            "log_mean_56",
+            "zero_rate_56",
+            "log_mean_112",
+            "zero_rate_112",
+            "planned_promotion",
+            "promotion_mean_28",
+            "national_holiday",
+            "regional_holiday",
+            "local_holiday",
+            "holiday_bridge",
+            "substitute_workday",
+            "public_sector_payday",
+            "store_family",
+            "city",
+            "state",
+            "store_type",
+            "cluster",
+            "weekday_log_mean_2",
+            "weekday_log_mean_4",
+            "weekday_log_mean_8",
+            "weekday_log_std_8",
+            "weekday_recent_shift",
+            "target_lag_28",
+            "target_lag_56",
+            "target_lag_364",
+            "origin_sales_lag_1",
+            "origin_sales_lag_2",
+            "origin_sales_lag_3",
+            "origin_sales_lag_6",
+            "origin_sales_lag_13",
+            "origin_sales_lag_27",
+            "raw_log_mean_3",
+            "raw_log_mean_7",
+            "raw_log_mean_14",
+            "raw_log_mean_28",
+            "raw_log_std_28",
+            "weekly_level_shift",
+            "last_three_level_shift",
+            "positive_sales_log_mean_28",
+            "days_since_positive_sale",
+            "promotion_weekday_change",
+            "promotion_level_change",
+            "promotion_log_mean_7",
+            "promotion_weekly_shift",
+            "promotion_horizon_log_mean",
+            "promotion_previous_plan",
+            "promotion_next_plan",
+            "store_log_mean_7",
+            "family_log_mean_7",
+            "store_log_mean_28",
+            "family_log_mean_28",
+            "dayofyear_sin",
+            "dayofyear_cos",
+            "year"
+          ],
+          "categorical_features": [
+            "store",
+            "family",
+            "store_family",
+            "city",
+            "state",
+            "store_type",
+            "cluster"
+          ],
+          "half_life_days": 0.0,
+          "feature_seconds": 0.6266124590183608,
+          "model_seconds": 94.60270204098197,
+          "runtime": {
+            "python": "3.12.15",
+            "lightgbm": "4.7.0",
+            "numpy": "2.5.5",
+            "pandas": "2.2.3"
+          },
+          "scores": {
+            "n": 28512,
+            "rmsle": 0.37573240856453705,
+            "mae": 48.95748639807823,
+            "wape": 0.10098447422125852,
+            "net_bias_units": 76641.07531755272,
+            "horizon_underforecast_units": 304050.4258699818,
+            "horizon_overforecast_units": 380691.5011875345
+          }
+        }
+      }
+    },
+    "2017-07-14": {
+      "hgb": {
+        "sha256": "5a033b20b7f0dda0874d56bf45de76978684b7f3540089d85077bd73fbd05522",
+        "metadata": {
+          "model": "calendar_hgb_staged",
+          "configuration": "reference",
+          "settings": {
+            "loss": "squared_error",
+            "learning_rate": 0.1,
+            "max_iter": 700,
+            "max_leaf_nodes": 43,
+            "min_samples_leaf": 40,
+            "l2_regularization": 1.0,
+            "max_bins": 127,
+            "early_stopping": false,
+            "random_state": 481
+          },
+          "stages": [
+            150,
+            400,
+            700
+          ],
+          "data": {
+            "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+            "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+            "synthetic": false,
+            "files": {
+              "train.csv": {
+                "rows": 3000888,
+                "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+              },
+              "test.csv": {
+                "rows": 28512,
+                "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+              },
+              "sample_submission.csv": {
+                "rows": 28512,
+                "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+              }
+            },
+            "missing_training_dates": [
+              "2013-12-25",
+              "2014-12-25",
+              "2015-12-25",
+              "2016-12-25"
+            ]
+          },
+          "calendar_source_files": {
+            "stores.csv": {
+              "rows": 54,
+              "sha256": "af503b2bce11d7906d249f81cc0598f10e2addcc9f6c59aa2d95c9f2652c296b"
+            },
+            "holidays_events.csv": {
+              "rows": 350,
+              "sha256": "81a183d6c4d691b57f84a0fde6bbf734a5b3c36a74b97378bf33a592648e2999"
+            }
+          },
+          "selection_manifest_sha256": "c9bb3fd6237e603ae9ca108701310d44fe9526de10f510cbd5c9c13994797a7c",
+          "cutoff": "2017-07-14",
+          "train_end": "2017-07-14",
+          "forecast_start": "2017-07-15",
+          "forecast_end": "2017-07-30",
+          "horizon": 16,
+          "submission": false,
+          "training_rows": 739530,
+          "features": [
+            "store",
+            "family",
+            "lead",
+            "weekday",
+            "day_of_month",
+            "month",
+            "month_end",
+            "same_weekday_lag_0",
+            "same_weekday_lag_7",
+            "same_weekday_lag_14",
+            "same_weekday_lag_21",
+            "last_sales",
+            "log_mean_7",
+            "zero_rate_7",
+            "log_mean_28",
+            "zero_rate_28",
+            "log_mean_56",
+            "zero_rate_56",
+            "log_mean_112",
+            "zero_rate_112",
+            "planned_promotion",
+            "promotion_mean_28",
+            "national_holiday",
+            "regional_holiday",
+            "local_holiday",
+            "holiday_bridge",
+            "substitute_workday",
+            "public_sector_payday"
+          ],
+          "categorical_features": [
+            "store",
+            "family"
+          ],
+          "feature_seconds": 0.21875400000135414,
+          "fit_seconds": 59.604560375009896,
+          "scores": {
+            "hgb_150": {
+              "n": 28512,
+              "rmsle": 0.39412368900893113,
+              "mae": 61.794141181818496,
+              "wape": 0.1282666701935832,
+              "net_bias_units": -439505.61994172307,
+              "horizon_underforecast_units": 699138.7655866449,
+              "horizon_overforecast_units": 259633.14564492172
+            },
+            "hgb_400": {
+              "n": 28512,
+              "rmsle": 0.39771457687039735,
+              "mae": 59.27759326861382,
+              "wape": 0.12304304842239258,
+              "net_bias_units": -541546.5662345649,
+              "horizon_underforecast_units": 755837.5164259672,
+              "horizon_overforecast_units": 214290.95019140234
+            },
+            "hgb_700": {
+              "n": 28512,
+              "rmsle": 0.3974485014703175,
+              "mae": 58.36529424665592,
+              "wape": 0.12114938090748857,
+              "net_bias_units": -549058.5720276772,
+              "horizon_underforecast_units": 760272.1315477034,
+              "horizon_overforecast_units": 211213.55952002617
+            }
+          },
+          "runtime": {
+            "python": "3.12.15",
+            "numpy": "2.5.5",
+            "pandas": "2.2.3",
+            "scikit_learn": "1.6.1",
+            "omp_threads": "2"
+          }
+        }
+      },
+      "lgb": {
+        "sha256": "d37986bf028c920fc79e0581c7b6a5823c12ceb2659d3d4e06dabb4cdae5a96c",
+        "metadata": {
+          "configuration": "family",
+          "grouping": "family",
+          "fitted_groups": [
+            {
+              "family_code": 0,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 1,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 2,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 3,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 4,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 5,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 6,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 7,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 8,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 9,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 10,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 11,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 12,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 13,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 14,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 15,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 16,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 17,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 18,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 19,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 20,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 21,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 22,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 23,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 24,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 25,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 26,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 27,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 28,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 29,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 30,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 31,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 32,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            }
+          ],
+          "settings": {
+            "objective": "regression",
+            "max_bin": 127,
+            "subsample": 0.85,
+            "subsample_freq": 1,
+            "colsample_bytree": 0.9,
+            "random_state": 481,
+            "deterministic": true,
+            "force_col_wise": true,
+            "histogram_pool_size": 128,
+            "n_jobs": 4,
+            "verbosity": -1,
+            "n_estimators": 500,
+            "learning_rate": 0.04,
+            "num_leaves": 31,
+            "min_child_samples": 40,
+            "reg_lambda": 3.0,
+            "reg_alpha": 0.05
+          },
+          "data": {
+            "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+            "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+            "synthetic": false,
+            "files": {
+              "train.csv": {
+                "rows": 3000888,
+                "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+              },
+              "test.csv": {
+                "rows": 28512,
+                "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+              },
+              "sample_submission.csv": {
+                "rows": 28512,
+                "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+              }
+            },
+            "missing_training_dates": [
+              "2013-12-25",
+              "2014-12-25",
+              "2015-12-25",
+              "2016-12-25"
+            ]
+          },
+          "calendar_source_files": {
+            "stores.csv": {
+              "rows": 54,
+              "sha256": "af503b2bce11d7906d249f81cc0598f10e2addcc9f6c59aa2d95c9f2652c296b"
+            },
+            "holidays_events.csv": {
+              "rows": 350,
+              "sha256": "81a183d6c4d691b57f84a0fde6bbf734a5b3c36a74b97378bf33a592648e2999"
+            }
+          },
+          "cutoff": "2017-07-14",
+          "forecast_start": "2017-07-15",
+          "forecast_end": "2017-07-30",
+          "origin_step": 8,
+          "history_days": 560,
+          "feature_max_calendar_lookback": 371,
+          "training_origins": [
+            "2016-10-07",
+            "2016-10-15",
+            "2016-10-23",
+            "2016-10-31",
+            "2016-11-08",
+            "2016-11-16",
+            "2016-11-24",
+            "2016-12-02",
+            "2016-12-10",
+            "2016-12-18",
+            "2016-12-26",
+            "2017-01-03",
+            "2017-01-11",
+            "2017-01-19",
+            "2017-01-27",
+            "2017-02-04",
+            "2017-02-12",
+            "2017-02-20",
+            "2017-02-28",
+            "2017-03-08",
+            "2017-03-16",
+            "2017-03-24",
+            "2017-04-01",
+            "2017-04-09",
+            "2017-04-17",
+            "2017-04-25",
+            "2017-05-03",
+            "2017-05-11",
+            "2017-05-19",
+            "2017-05-27",
+            "2017-06-04",
+            "2017-06-12",
+            "2017-06-20",
+            "2017-06-28"
+          ],
+          "training_rows": 965844,
+          "features": [
+            "store",
+            "family",
+            "lead",
+            "weekday",
+            "day_of_month",
+            "month",
+            "month_end",
+            "same_weekday_lag_0",
+            "same_weekday_lag_7",
+            "same_weekday_lag_14",
+            "same_weekday_lag_21",
+            "last_sales",
+            "log_mean_7",
+            "zero_rate_7",
+            "log_mean_28",
+            "zero_rate_28",
+            "log_mean_56",
+            "zero_rate_56",
+            "log_mean_112",
+            "zero_rate_112",
+            "planned_promotion",
+            "promotion_mean_28",
+            "national_holiday",
+            "regional_holiday",
+            "local_holiday",
+            "holiday_bridge",
+            "substitute_workday",
+            "public_sector_payday",
+            "store_family",
+            "city",
+            "state",
+            "store_type",
+            "cluster",
+            "weekday_log_mean_2",
+            "weekday_log_mean_4",
+            "weekday_log_mean_8",
+            "weekday_log_std_8",
+            "weekday_recent_shift",
+            "target_lag_28",
+            "target_lag_56",
+            "target_lag_364",
+            "origin_sales_lag_1",
+            "origin_sales_lag_2",
+            "origin_sales_lag_3",
+            "origin_sales_lag_6",
+            "origin_sales_lag_13",
+            "origin_sales_lag_27",
+            "raw_log_mean_3",
+            "raw_log_mean_7",
+            "raw_log_mean_14",
+            "raw_log_mean_28",
+            "raw_log_std_28",
+            "weekly_level_shift",
+            "last_three_level_shift",
+            "positive_sales_log_mean_28",
+            "days_since_positive_sale",
+            "promotion_weekday_change",
+            "promotion_level_change",
+            "promotion_log_mean_7",
+            "promotion_weekly_shift",
+            "promotion_horizon_log_mean",
+            "promotion_previous_plan",
+            "promotion_next_plan",
+            "store_log_mean_7",
+            "family_log_mean_7",
+            "store_log_mean_28",
+            "family_log_mean_28",
+            "dayofyear_sin",
+            "dayofyear_cos",
+            "year"
+          ],
+          "categorical_features": [
+            "store",
+            "family",
+            "store_family",
+            "city",
+            "state",
+            "store_type",
+            "cluster"
+          ],
+          "half_life_days": 0.0,
+          "feature_seconds": 0.6198274999915157,
+          "model_seconds": 95.66585295798723,
+          "runtime": {
+            "python": "3.12.15",
+            "lightgbm": "4.7.0",
+            "numpy": "2.5.5",
+            "pandas": "2.2.3"
+          },
+          "scores": {
+            "n": 28512,
+            "rmsle": 0.3939530273194742,
+            "mae": 55.93751774881345,
+            "wape": 0.11611002278393695,
+            "net_bias_units": -344253.5184479458,
+            "horizon_underforecast_units": 591526.4987440328,
+            "horizon_overforecast_units": 247272.98029608704
+          }
+        }
+      }
+    },
+    "2017-07-30": {
+      "hgb": {
+        "sha256": "4e0d7fb558d543eff001fc71a87361b27a89ed6d966d8ed675a24a08de0f61e5",
+        "metadata": {
+          "model": "calendar_hgb_staged",
+          "configuration": "reference",
+          "settings": {
+            "loss": "squared_error",
+            "learning_rate": 0.1,
+            "max_iter": 700,
+            "max_leaf_nodes": 43,
+            "min_samples_leaf": 40,
+            "l2_regularization": 1.0,
+            "max_bins": 127,
+            "early_stopping": false,
+            "random_state": 481
+          },
+          "stages": [
+            150,
+            400,
+            700
+          ],
+          "data": {
+            "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+            "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+            "synthetic": false,
+            "files": {
+              "train.csv": {
+                "rows": 3000888,
+                "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+              },
+              "test.csv": {
+                "rows": 28512,
+                "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+              },
+              "sample_submission.csv": {
+                "rows": 28512,
+                "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+              }
+            },
+            "missing_training_dates": [
+              "2013-12-25",
+              "2014-12-25",
+              "2015-12-25",
+              "2016-12-25"
+            ]
+          },
+          "calendar_source_files": {
+            "stores.csv": {
+              "rows": 54,
+              "sha256": "af503b2bce11d7906d249f81cc0598f10e2addcc9f6c59aa2d95c9f2652c296b"
+            },
+            "holidays_events.csv": {
+              "rows": 350,
+              "sha256": "81a183d6c4d691b57f84a0fde6bbf734a5b3c36a74b97378bf33a592648e2999"
+            }
+          },
+          "selection_manifest_sha256": "c9bb3fd6237e603ae9ca108701310d44fe9526de10f510cbd5c9c13994797a7c",
+          "cutoff": "2017-07-30",
+          "train_end": "2017-07-30",
+          "forecast_start": "2017-07-31",
+          "forecast_end": "2017-08-15",
+          "horizon": 16,
+          "submission": false,
+          "training_rows": 739530,
+          "features": [
+            "store",
+            "family",
+            "lead",
+            "weekday",
+            "day_of_month",
+            "month",
+            "month_end",
+            "same_weekday_lag_0",
+            "same_weekday_lag_7",
+            "same_weekday_lag_14",
+            "same_weekday_lag_21",
+            "last_sales",
+            "log_mean_7",
+            "zero_rate_7",
+            "log_mean_28",
+            "zero_rate_28",
+            "log_mean_56",
+            "zero_rate_56",
+            "log_mean_112",
+            "zero_rate_112",
+            "planned_promotion",
+            "promotion_mean_28",
+            "national_holiday",
+            "regional_holiday",
+            "local_holiday",
+            "holiday_bridge",
+            "substitute_workday",
+            "public_sector_payday"
+          ],
+          "categorical_features": [
+            "store",
+            "family"
+          ],
+          "feature_seconds": 0.19643166702007875,
+          "fit_seconds": 61.645255917013856,
+          "scores": {
+            "hgb_150": {
+              "n": 28512,
+              "rmsle": 0.41403415374579716,
+              "mae": 73.6255584450174,
+              "wape": 0.15760819786191052,
+              "net_bias_units": 510252.9840946458,
+              "horizon_underforecast_units": 388567.9434485236,
+              "horizon_overforecast_units": 898820.9275431694
+            },
+            "hgb_400": {
+              "n": 28512,
+              "rmsle": 0.40642347722711136,
+              "mae": 67.78450398029958,
+              "wape": 0.14510441402324623,
+              "net_bias_units": 343747.37673402455,
+              "horizon_underforecast_units": 409375.04818662594,
+              "horizon_overforecast_units": 753122.4249206504
+            },
+            "hgb_700": {
+              "n": 28512,
+              "rmsle": 0.4043019697276619,
+              "mae": 64.06832501591857,
+              "wape": 0.13714929243397062,
+              "net_bias_units": 185310.8301985233,
+              "horizon_underforecast_units": 438886.3033605756,
+              "horizon_overforecast_units": 624197.1335590989
+            }
+          },
+          "runtime": {
+            "python": "3.12.15",
+            "numpy": "2.5.5",
+            "pandas": "2.2.3",
+            "scikit_learn": "1.6.1",
+            "omp_threads": "2"
+          }
+        }
+      },
+      "lgb": {
+        "sha256": "a66e3722be3860e5fa7ebbb2562fcc504508c4e91ad6e260ddd4c9751cf32693",
+        "metadata": {
+          "configuration": "family",
+          "grouping": "family",
+          "fitted_groups": [
+            {
+              "family_code": 0,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 1,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 2,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 3,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 4,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 5,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 6,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 7,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 8,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 9,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 10,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 11,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 12,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 13,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 14,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 15,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 16,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 17,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 18,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 19,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 20,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 21,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 22,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 23,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 24,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 25,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 26,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 27,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 28,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 29,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 30,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 31,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            },
+            {
+              "family_code": 32,
+              "training_rows": 29268,
+              "forecast_rows": 864
+            }
+          ],
+          "settings": {
+            "objective": "regression",
+            "max_bin": 127,
+            "subsample": 0.85,
+            "subsample_freq": 1,
+            "colsample_bytree": 0.9,
+            "random_state": 481,
+            "deterministic": true,
+            "force_col_wise": true,
+            "histogram_pool_size": 128,
+            "n_jobs": 4,
+            "verbosity": -1,
+            "n_estimators": 500,
+            "learning_rate": 0.04,
+            "num_leaves": 31,
+            "min_child_samples": 40,
+            "reg_lambda": 3.0,
+            "reg_alpha": 0.05
+          },
+          "data": {
+            "source": "Kaggle Store Sales \u2013 Time Series Forecasting",
+            "source_url": "https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data",
+            "synthetic": false,
+            "files": {
+              "train.csv": {
+                "rows": 3000888,
+                "sha256": "99a1b7f4241821df10fa71f23abdd71c634f71f901e3cab1400c0f0c583f862c"
+              },
+              "test.csv": {
+                "rows": 28512,
+                "sha256": "087ec1ecec76dbba9ea2adb48b8b2fd527c7c59adb82b0dfb9f6f82739400d26"
+              },
+              "sample_submission.csv": {
+                "rows": 28512,
+                "sha256": "17505ec561d9bc64a3c10c3eb00474becf162d9053cebf014a58a6c82ed530c4"
+              }
+            },
+            "missing_training_dates": [
+              "2013-12-25",
+              "2014-12-25",
+              "2015-12-25",
+              "2016-12-25"
+            ]
+          },
+          "calendar_source_files": {
+            "stores.csv": {
+              "rows": 54,
+              "sha256": "af503b2bce11d7906d249f81cc0598f10e2addcc9f6c59aa2d95c9f2652c296b"
+            },
+            "holidays_events.csv": {
+              "rows": 350,
+              "sha256": "81a183d6c4d691b57f84a0fde6bbf734a5b3c36a74b97378bf33a592648e2999"
+            }
+          },
+          "cutoff": "2017-07-30",
+          "forecast_start": "2017-07-31",
+          "forecast_end": "2017-08-15",
+          "origin_step": 8,
+          "history_days": 560,
+          "feature_max_calendar_lookback": 371,
+          "training_origins": [
+            "2016-10-23",
+            "2016-10-31",
+            "2016-11-08",
+            "2016-11-16",
+            "2016-11-24",
+            "2016-12-02",
+            "2016-12-10",
+            "2016-12-18",
+            "2016-12-26",
+            "2017-01-03",
+            "2017-01-11",
+            "2017-01-19",
+            "2017-01-27",
+            "2017-02-04",
+            "2017-02-12",
+            "2017-02-20",
+            "2017-02-28",
+            "2017-03-08",
+            "2017-03-16",
+            "2017-03-24",
+            "2017-04-01",
+            "2017-04-09",
+            "2017-04-17",
+            "2017-04-25",
+            "2017-05-03",
+            "2017-05-11",
+            "2017-05-19",
+            "2017-05-27",
+            "2017-06-04",
+            "2017-06-12",
+            "2017-06-20",
+            "2017-06-28",
+            "2017-07-06",
+            "2017-07-14"
+          ],
+          "training_rows": 965844,
+          "features": [
+            "store",
+            "family",
+            "lead",
+            "weekday",
+            "day_of_month",
+            "month",
+            "month_end",
+            "same_weekday_lag_0",
+            "same_weekday_lag_7",
+            "same_weekday_lag_14",
+            "same_weekday_lag_21",
+            "last_sales",
+            "log_mean_7",
+            "zero_rate_7",
+            "log_mean_28",
+            "zero_rate_28",
+            "log_mean_56",
+            "zero_rate_56",
+            "log_mean_112",
+            "zero_rate_112",
+            "planned_promotion",
+            "promotion_mean_28",
+            "national_holiday",
+            "regional_holiday",
+            "local_holiday",
+            "holiday_bridge",
+            "substitute_workday",
+            "public_sector_payday",
+            "store_family",
+            "city",
+            "state",
+            "store_type",
+            "cluster",
+            "weekday_log_mean_2",
+            "weekday_log_mean_4",
+            "weekday_log_mean_8",
+            "weekday_log_std_8",
+            "weekday_recent_shift",
+            "target_lag_28",
+            "target_lag_56",
+            "target_lag_364",
+            "origin_sales_lag_1",
+            "origin_sales_lag_2",
+            "origin_sales_lag_3",
+            "origin_sales_lag_6",
+            "origin_sales_lag_13",
+            "origin_sales_lag_27",
+            "raw_log_mean_3",
+            "raw_log_mean_7",
+            "raw_log_mean_14",
+            "raw_log_mean_28",
+            "raw_log_std_28",
+            "weekly_level_shift",
+            "last_three_level_shift",
+            "positive_sales_log_mean_28",
+            "days_since_positive_sale",
+            "promotion_weekday_change",
+            "promotion_level_change",
+            "promotion_log_mean_7",
+            "promotion_weekly_shift",
+            "promotion_horizon_log_mean",
+            "promotion_previous_plan",
+            "promotion_next_plan",
+            "store_log_mean_7",
+            "family_log_mean_7",
+            "store_log_mean_28",
+            "family_log_mean_28",
+            "dayofyear_sin",
+            "dayofyear_cos",
+            "year"
+          ],
+          "categorical_features": [
+            "store",
+            "family",
+            "store_family",
+            "city",
+            "state",
+            "store_type",
+            "cluster"
+          ],
+          "half_life_days": 0.0,
+          "feature_seconds": 0.7022525829961523,
+          "model_seconds": 85.2140960409888,
+          "runtime": {
+            "python": "3.12.15",
+            "lightgbm": "4.7.0",
+            "numpy": "2.5.5",
+            "pandas": "2.2.3"
+          },
+          "scores": {
+            "n": 28512,
+            "rmsle": 0.40679273332340554,
+            "mae": 63.19219293867403,
+            "wape": 0.1352737807135856,
+            "net_bias_units": 70895.62425709813,
+            "horizon_underforecast_units": 481708.8503922432,
+            "horizon_overforecast_units": 552604.4746493413
+          }
+        }
+      }
+    }
+  },
+  "previous_cache_sha256": {
+    "hgb": "c86dd835d33b2c2843ff6ac061959ee010607e18bf7a78dab5b2fb2de29b948f",
+    "t0": "ccbbfad434f31ef2f5131db6539807497a559e8b55e56493665181a62f947a88"
+  },
+  "artifact_sha256": {
+    "selection-window-scores.csv": "d467ab0e89525efa28a1fe7ba4736c108bd99f814063790a9d07066329a3d4bf",
+    "selection-grid.csv": "ace46c303377bc1e93117ea5160540ac7e667fe7aceff3a9dd6451fa374466fa",
+    "backtest.csv": "e6ee81cd3ae355f83a1c1ea591876338044c326fe5d2a83bb22fb382ee653280",
+    "screening.csv": "34b554ddc7e5be91c03e104ca967339a9ecdc151921f214365488e2ecd7b10a1",
+    "screening.json": "77f1cfd75da47343effd59e7d8af58f4e8f668b5bc223d780c7007d58242325a"
+  },
+  "interpretation": "Chronological selection with retrospective reuse of previously reviewed historical dates.",
+  "kaggle_status": "unsubmitted",
+  "kaggle_rmsle": null,
+  "screening": {
+    "description": "Exploratory screening of four LightGBM specifications on one historical model-selection window.",
+    "cutoff": "2017-06-12",
+    "forecast_start": "2017-06-13",
+    "forecast_end": "2017-06-28",
+    "later_check_windows_used": false,
+    "csv": "screening.csv",
+    "metadata": "screening.json"
+  }
+}

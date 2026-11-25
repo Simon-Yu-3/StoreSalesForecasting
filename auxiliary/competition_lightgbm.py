@@ -13,6 +13,7 @@ import pandas as pd
 from auxiliary.calendar_experiment import _load_calendar, _target_flags, calendar_flags
 from auxiliary.data import Panel, load_data
 from auxiliary.global_benchmark import _metrics, origin_features
+from auxiliary.provenance import feature_provenance
 from auxiliary.run import submission_frame
 
 CATEGORICAL = (
@@ -333,6 +334,14 @@ def main():
     )
     model_seconds = perf_counter() - start
     metadata = {
+        **feature_provenance(
+            "provenance.py",
+            "data.py",
+            "calendar_experiment.py",
+            "global_benchmark.py",
+            "run.py",
+            "competition_lightgbm.py",
+        ),
         "configuration": args.configuration,
         "grouping": "family" if args.configuration == "family" else "global",
         "fitted_groups": fitted_groups,

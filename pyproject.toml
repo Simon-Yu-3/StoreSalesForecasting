@@ -1,8 +1,44 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "econ481-store-sales"
 version = "0.1.0"
 description = "Reproducible backtests for Kaggle Store Sales forecasts"
+readme = "README.md"
 requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.1.3,<3",
+    "pandas>=2.2.3,<3",
+    "scipy>=1.15.3,<2",
+    "scikit-learn>=1.6.1,<2",
+    "matplotlib>=3.10,<4",
+]
+
+[project.optional-dependencies]
+test = ["pytest==8.3.4", "ruff==0.11.13"]
+supplement = ["reportlab==4.4.9"]
+competition = [
+    "numpy==2.5.5",
+    "pandas==2.2.3",
+    "scipy==1.18.1",
+    "scikit-learn==1.6.1",
+    "lightgbm==4.7.0",
+]
+inference = [
+    "prophet==1.2.1",
+    "cmdstanpy==1.3.2",
+    "tfc-t0[torch]==0.6.1",
+    "torch==2.15.0",
+]
+
+[project.scripts]
+storesales-forecast = "auxiliary.run:main"
+
+[tool.setuptools.packages.find]
+include = ["auxiliary", "auxiliary.*"]
+namespaces = false
 
 [tool.ruff]
 line-length = 88
@@ -18,3 +54,4 @@ known-first-party = ["auxiliary"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 filterwarnings = ["ignore::DeprecationWarning"]
+markers = ["integration: fits optional native models on synthetic data"]

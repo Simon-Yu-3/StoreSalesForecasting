@@ -16,6 +16,7 @@ from auxiliary.competition_ensemble import _hgb_settings, _with_calendar
 from auxiliary.data import load_data
 from auxiliary.final_experiment import FUTURE_PROMOTION_MODEL, _hgb_inputs, _sha256
 from auxiliary.global_benchmark import _metrics
+from auxiliary.provenance import feature_provenance
 from auxiliary.run import submission_frame
 
 ITERATIONS = (150, 400, 700)
@@ -106,6 +107,16 @@ def main():
         raise RuntimeError("The fitted model did not produce every requested stage.")
 
     metadata = {
+        **feature_provenance(
+            "provenance.py",
+            "data.py",
+            "calendar_experiment.py",
+            "global_benchmark.py",
+            "run.py",
+            "final_experiment.py",
+            "competition_ensemble.py",
+            "competition_hgb.py",
+        ),
         "model": "calendar_hgb_staged",
         "configuration": configuration,
         "settings": settings,

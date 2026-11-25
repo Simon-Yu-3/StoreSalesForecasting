@@ -110,9 +110,30 @@ def _submission(panel, model, foundation, jobs):
 
 def submission_frame(panel, dates, predictions):
     """Map a complete forecast matrix to the original Kaggle test IDs."""
+    dates = pd.DatetimeIndex(dates)
+    predictions = np.asarray(predictions)
+    if (
+        len(dates) != panel.horizon
+        or not dates.is_unique
+        or dates.hasnans
+        or not panel.series.is_unique
+    ):
+        raise ValueError("Submission requires unique series and all forecast dates.")
+    expected_shape = (len(panel.series), panel.horizon)
+    if predictions.shape != expected_shape:
+        raise ValueError(f"Submission forecast shape must be {expected_shape}.")
     if not np.isfinite(predictions).all() or (predictions < 0).any():
         raise ValueError("Submission must contain finite nonnegative forecasts.")
     test = panel.test
+    keys = ["date", "store_nbr", "family"]
+    if (
+        len(test) != expected_shape[0] * expected_shape[1]
+        or test["id"].isna().any()
+        or not test["id"].is_unique
+        or test[keys].isna().any().any()
+        or test.duplicated(keys).any()
+    ):
+        raise ValueError("Test IDs must identify a complete, unique forecast grid.")
     store_family = pd.MultiIndex.from_frame(test[["store_nbr", "family"]])
     series_index = panel.series.get_indexer(store_family)
     date_index = dates.get_indexer(test["date"])

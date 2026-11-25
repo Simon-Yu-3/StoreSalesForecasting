@@ -34,3 +34,4 @@ build/
 # Kaggle downloads and local experiment outputs
 /data/raw/
 /results/
+/tmp/pdfs/

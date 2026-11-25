@@ -1,12 +1,30 @@
 # Forecasting store sales with promotion schedules
 
-**UW ECON 481A · Autumn 2026**
+**Junhui (Simon) Yu · UW ECON 481A · Autumn 2026**
 
 A replenishment planner needs 16 days of forecasts before the next ordering cycle. For Ecuadorian grocer Corporación Favorita, we compare seasonal baselines, independently fitted Prophet models, a pooled gradient-boosted tree, and the pretrained t0-beta time-series model. Within the pooled tree, we test the incremental predictive value of a future promotion schedule after accounting for prior promotions.
 
-**[Final report (executed notebook)](project.ipynb)** · [Kaggle results](#kaggle-results) · [Data exploration](#explore-the-data) · [Reproduce](#reproduce-the-analysis)
+**[Programming sample](docs/programming-sample.md)** · [Two-page PDF](output/pdf/StoreSalesForecasting-Programming-Supplement.pdf) · [Executed research report](project.ipynb) · [Reproduce](docs/reproduction.md)
 
 The project's best recorded Kaggle submission scored **0.42172 RMSLE**. A blend of calendar HGB, product-family LightGBM, and t0-beta reduced the first submission's error by **10.7%** on the same 28,512 test rows. In the historical study, the value of the promotion schedule was concentrated in promoted observations, and its effect on shortages and excesses varied by window. [Kaggle results and model recipe](#kaggle-results)
+
+## Run the programming example
+
+The executable sample reads typed CSV data, validates keyed records, joins a true 28-day calendar lag, fits a small HGB model, and evaluates all 16 forecast days from one cutoff. It writes a metrics CSV and forecast figure. The default run uses six generated series, so a reviewer can run the code without competition credentials.
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e ".[test]"
+python examples/programming_sample.py --fixture
+python -m pytest tests -q
+```
+
+The example produces `results/programming-sample/metrics.csv` and `forecast.png`. It is a compact implementation example. The full ensemble, historical experiments, and scored Kaggle files have separate records below. The installed CLI also runs a generated-data benchmark with `storesales-forecast --fixture --output-dir results/fixture`.
+
+The `competition` extra enables the native LightGBM integration test. GitHub Actions installs that extra and verifies actual HGB and LightGBM fits, keyed forecast export, the installed CLI, and the CSV example. [Programming smoke workflow](.github/workflows/programming-smoke.yml)
+
+[Read the programming sample](docs/programming-sample.md) · [Two-page PDF](output/pdf/StoreSalesForecasting-Programming-Supplement.pdf) · [Executable source](examples/programming_sample.py) · [Full experiment reproduction](docs/reproduction.md)
 
 ## Findings
 
@@ -118,119 +136,6 @@ With the recipe fixed, pooled RMSLE on the three later historical windows fell f
 | July 31–August 15, 2017 | 0.40593 | **0.39534** |
 
 Kaggle scored V3 at **0.42172 RMSLE** on November 19, 2026, **3.74%** below V2 and **10.68%** below V1. The completed submission and score were recorded from the screenshot supplied by the student. The frozen historical selection archive documents the recipe before submission, and the separate submission record holds the Kaggle result. [Historical model recipe](files/refinement-results/manifest.json) · [Submitted CSV checksum and score evidence](files/refinement-results/submission-manifest.json)
-
-## Reproduce the analysis
-
-### Execute the report and verify the implementation
-
-```bash
-conda env create -f environment.yml
-conda activate econ481-store-sales
-python -m pytest tests
-python -m auxiliary.final_experiment --fixture --output-dir results/final-fixture
-ECON481_RESULTS=results/final-fixture python -m pytest --nbmake project.ipynb
-ECON481_RESULTS=files/final-results python -m pytest --nbmake project.ipynb
-```
-
-The report reads one result directory per execution. By default it reads the checked-in aggregate bundle. Set `ECON481_RESULTS` to analyze a rerun. GitHub Actions runs Ruff, Python tests and both notebook executions. The small fixture verifies the pipeline, and saved official aggregates keep the default check independent of competition authentication and checkpoint downloads. [Workflow](.github/workflows/run-notebook.yml)
-
-### Regenerate the official results
-
-Download the [Kaggle archive](https://www.kaggle.com/competitions/store-sales-time-series-forecasting/data) to `data/raw/store-sales-time-series-forecasting.zip`. In the course environment, install the inference dependencies. Linux CPU runners can install `torch==2.15.0` from the [CPU wheel index](https://download.pytorch.org/whl/cpu) first.
-
-```bash
-python -m pip install -r requirements-t0.txt
-export OMP_NUM_THREADS=4
-data=data/raw/store-sales-time-series-forecasting.zip
-cache=results/final-model-cache
-
-python -m auxiliary.final_experiment --data "$data" --output-dir "$cache" \
-  --model-shard prophet_promotion --jobs 8
-python -m auxiliary.final_experiment --data "$data" --output-dir "$cache" \
-  --model-shard t0_beta_promotion --device cpu
-python -m auxiliary.final_experiment --data "$data" --output-dir results/final \
-  --prediction-cache "$cache"
-ECON481_RESULTS=results/final python -m pytest --nbmake project.ipynb
-python -m auxiliary.final_experiment --data "$data" --output-dir results/kaggle \
-  --submission-from results/final/manifest.json
-```
-
-The shard commands run the slow models in separate Python processes. The aggregate run validates the cache against the data hashes and cutoff dates before training and comparing the pooled model. With competition access, the optional `full_experiment` GitHub Actions dispatch regenerates the report tables using a repository `KAGGLE_API_TOKEN` secret.
-
-The descriptive tables, homepage figure, and calendar follow-up can be regenerated without rerunning Prophet or t0-beta.
-
-```bash
-python -m auxiliary.data_profile --data "$data" --output-dir files/data-profile
-python -m auxiliary.plot_evaluation
-python -m auxiliary.calendar_experiment --data "$data" \
-  --selection-manifest files/final-results/manifest.json --output-dir results/calendar
-ECON481_CALENDAR_RESULTS=results/calendar python -m pytest --nbmake project.ipynb
-```
-
-### Regenerate the second Kaggle submission
-
-Use the Kaggle archive and inference environment above. Each command runs in its own Python process. The last command checks test IDs and combines the two forecast files. The archived manifest identifies the actual submitted file by SHA-256.
-
-```bash
-data=data/raw/store-sales-time-series-forecasting.zip
-run_dir=results/competition-v2
-python -m auxiliary.competition_ensemble calendar_hgb --data "$data" --output-dir "$run_dir"
-python -m auxiliary.competition_ensemble t0_beta --data "$data" --output-dir "$run_dir"
-python -m auxiliary.competition_ensemble blend --data "$data" --output-dir "$run_dir"
-```
-
-The predictions are written to `results/competition-v2/submission.csv`. The run also records the test dates, blend weights, and forecast checksums. A fresh CPU run reproduced the submitted CSV byte for byte in the recorded software environment.
-
-Run the historical stages below to refit the components at all six cutoffs and reproduce the blend weight search. The `evaluate` stage writes the selection and later-window RMSLE for each recipe from the cached forecasts.
-
-```bash
-backtest_dir=results/competition-v2-backtest
-python -m auxiliary.competition_backtest hgb --data "$data" --output-dir "$backtest_dir"
-python -m auxiliary.competition_backtest t0 --data "$data" --output-dir "$backtest_dir"
-python -m auxiliary.competition_backtest evaluate --data "$data" --output-dir "$backtest_dir"
-```
-
-### Regenerate the third Kaggle submission
-
-Use the historical t0-beta cache and test CSV generated by the preceding competition commands. The refinement was fitted in Python 3.12 with the versions in `requirements-competition.txt`.
-
-The recorded macOS run exposed scikit-learn's bundled OpenMP library to LightGBM. After activating the environment below, macOS users can set `DYLD_LIBRARY_PATH="$VIRTUAL_ENV/lib/python3.12/site-packages/sklearn/.dylibs"` before fitting.
-
-```bash
-python3.12 -m venv .venv-competition
-source .venv-competition/bin/activate
-python -m pip install -r requirements-competition.txt
-export OMP_NUM_THREADS=4
-data=data/raw/store-sales-time-series-forecasting.zip
-
-for cutoff in 2017-04-30 2017-05-16 2017-06-12 2017-06-28 2017-07-14 2017-07-30; do
-  python -m auxiliary.competition_hgb --data "$data" --cutoff "$cutoff" \
-    --output-dir "results/hgb-refinement/$cutoff"
-  python -m auxiliary.competition_lightgbm --data "$data" --cutoff "$cutoff" \
-    --configuration family --output-dir "results/lgb-family/$cutoff"
-done
-python -m auxiliary.competition_refinement evaluate --data "$data" \
-  --previous-cache results/competition-v2-backtest \
-  --hgb-cache results/hgb-refinement --lgb-cache results/lgb-family \
-  --output-dir results/refinement
-```
-
-For the official test dates, refit the two tree models and combine them with the existing t0-beta forecasts. Each component CSV is checked against its model metadata, keyed predictions, and the selected configuration.
-
-```bash
-python -m auxiliary.competition_hgb --data "$data" --cutoff 2017-08-15 \
-  --submission --output-dir results/hgb-refinement/test
-python -m auxiliary.competition_lightgbm --data "$data" --configuration family \
-  --submission --output-dir results/lgb-family/test
-python -m auxiliary.competition_refinement blend --data "$data" \
-  --selection-manifest files/refinement-results/manifest.json \
-  --hgb-csv results/hgb-refinement/test/hgb_700.csv \
-  --lgb-csv results/lgb-family/test/submission.csv \
-  --t0-csv results/competition-v2/t0_beta.csv \
-  --output-dir results/refinement-submission
-```
-
-The upload file is `results/refinement-submission/submission.csv`. The export checks all 28,512 test IDs. Its manifest records the selected weights, input hashes, row count, and forecast dates. Historical cache metadata records the training origins and software versions.
 
 ## Earlier experiments
 
